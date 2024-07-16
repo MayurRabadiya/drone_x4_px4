@@ -39,6 +39,8 @@
 #include <mathlib/math/Functions.hpp>
 #include <px4_platform_common/events.h>
 
+#include<iostream>
+
 using namespace matrix;
 using namespace time_literals;
 using math::radians;
@@ -95,6 +97,8 @@ MulticopterRateControl::parameters_updated()
 	// manual rate control acro mode rate limits
 	_acro_rate_max = Vector3f(radians(_param_mc_acro_r_max.get()), radians(_param_mc_acro_p_max.get()),
 				  radians(_param_mc_acro_y_max.get()));
+
+	_drone_x4 = _param_ca_controller.get(); //** MayurR */
 }
 
 void
@@ -248,6 +252,17 @@ MulticopterRateControl::Run()
 					}
 				}
 			}
+
+			// std::cout << "_rates_setpoint: " << _rates_setpoint(0) << "  "<<_rates_setpoint(1) <<"  "<<_rates_setpoint(2)<<std::endl;
+
+			//** MayurR */
+			if (_drone_x4 == 1)
+			{
+				vehicle_torque_setpoint.xyz[0] = _rates_setpoint(0);
+				vehicle_torque_setpoint.xyz[1] = _rates_setpoint(1);
+				vehicle_torque_setpoint.xyz[2] = _rates_setpoint(2);
+			}
+			//** MayurR */
 
 			vehicle_thrust_setpoint.timestamp_sample = angular_velocity.timestamp_sample;
 			vehicle_thrust_setpoint.timestamp = hrt_absolute_time();

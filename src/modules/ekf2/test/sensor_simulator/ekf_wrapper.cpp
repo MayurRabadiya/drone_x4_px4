@@ -242,12 +242,16 @@ bool EkfWrapper::isWindVelocityEstimated() const
 
 bool EkfWrapper::isIntendingTerrainRngFusion() const
 {
-	return _ekf->control_status_flags().rng_terrain;
+	terrain_fusion_status_u terrain_status;
+	terrain_status.value = _ekf->getTerrainEstimateSensorBitfield();
+	return terrain_status.flags.range_finder;
 }
 
 bool EkfWrapper::isIntendingTerrainFlowFusion() const
 {
-	return _ekf->control_status_flags().opt_flow_terrain;
+	terrain_fusion_status_u terrain_status;
+	terrain_status.value = _ekf->getTerrainEstimateSensorBitfield();
+	return terrain_status.flags.flow;
 }
 
 Eulerf EkfWrapper::getEulerAngles() const

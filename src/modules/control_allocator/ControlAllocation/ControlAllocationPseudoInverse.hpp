@@ -59,7 +59,11 @@ public:
 				    bool update_normalization_scale) override;
 
 protected:
-	matrix::Matrix<float, NUM_ACTUATORS, NUM_AXES> _mix;
+	// matrix::Matrix<float, NUM_ACTUATORS, NUM_AXES> _mix;
+// MayurR
+	matrix::Matrix<float, NUM_ACTUATORS, 8> _mix;
+	bool _uav_type;
+
 
 	bool _mix_update_needed{false};
 

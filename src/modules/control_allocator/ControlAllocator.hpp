@@ -117,6 +117,11 @@ private:
 		param_t slew_rate_servos[MAX_NUM_SERVOS];
 	};
 
+	//** MayurR */
+	param_t _drone_x4_handle;
+	int32_t _drone_x4{0};
+	//** MayurR */
+
 	struct Params {
 		float slew_rate_motors[MAX_NUM_MOTORS];
 		float slew_rate_servos[MAX_NUM_SERVOS];

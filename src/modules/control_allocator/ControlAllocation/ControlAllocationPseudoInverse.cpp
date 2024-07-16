@@ -40,6 +40,7 @@
  */
 
 #include "ControlAllocationPseudoInverse.hpp"
+#include <iostream>
 
 void
 ControlAllocationPseudoInverse::setEffectivenessMatrix(
@@ -58,6 +59,8 @@ ControlAllocationPseudoInverse::updatePseudoInverse()
 {
 	if (_mix_update_needed) {
 		matrix::geninv(_effectiveness, _mix);
+		// std::cout<<"_effectiveness:" << _effectiveness << std::endl;
+		// std::cout<<"_mix :" << _mix << std::endl;
 
 		if (_normalization_needs_update && !_had_actuator_failure) {
 			updateControlAllocationMatrixScale();

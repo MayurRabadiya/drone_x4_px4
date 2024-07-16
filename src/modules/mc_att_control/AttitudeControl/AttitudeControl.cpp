@@ -39,9 +39,11 @@
 
 #include <mathlib/math/Functions.hpp>
 
+#include<iostream>
+
 using namespace matrix;
 
-void AttitudeControl::setProportionalGain(const matrix::Vector3f &proportional_gain, const float yaw_weight)
+void AttitudeControl::setProportionalGain(const Vector3f &proportional_gain, const float yaw_weight)
 {
 	_proportional_gain = proportional_gain;
 	_yaw_w = math::constrain(yaw_weight, 0.f, 1.f);
@@ -51,6 +53,57 @@ void AttitudeControl::setProportionalGain(const matrix::Vector3f &proportional_g
 		_proportional_gain(2) /= _yaw_w;
 	}
 }
+
+
+//** MayurR */
+void AttitudeControl::setAtitttudeGain(const Vector3f &rotation_gain, const Vector3f &angularVal_gain)
+{
+	_rotation_gain = rotation_gain;
+	_angularVal_gain = angularVal_gain;
+}
+
+void AttitudeControl::setInertia(const matrix::Vector3f &inertia)
+{
+	_inertia = inertia;
+}
+
+matrix::Vector3f AttitudeControl::update(const float dt, const Quatf &q_state, const Quatf &q_input, const Vector3f &angular_velocity)
+{
+	// Vector3f _Ki_w = Vector3f (0.06f, 0.06f, 0.06f);
+	SquareMatrix3f _Ib;
+	SquareMatrix3f _R_sp;
+	SquareMatrix3f _R_state;
+
+	_Ib.setZero();
+	_Ib(0, 0) = _inertia(0);
+	_Ib(1, 1) = _inertia(1);
+	_Ib(2, 2) = _inertia(2);
+	q_sp = q_input;
+
+	// Quaternionf q1 = (q_sp).normalized();
+	// Quaternionf q2 = (q_state).inversed().normalized();
+	// Quaternionf q_err = q2 * q1;
+	// q_err.normalize();
+
+	// Vector3f _w_sp = Vector3f(q_err(1), q_err(2), q_err(3)).emult(_angularVal_gain); // * sign(q_err(0));
+	// _w_sp *= q_err(0) > 0.0f ? 1.0f : -1.0f;
+
+	// Vector3f w_err = _w_sp - angular_velocity;
+	// Vector3f _torque_sp = w_err.emult(_rotation_gain) + angular_velocity.cross(_Ib * angular_velocity);
+
+
+	_R_sp = Dcmf(q_sp);
+	_R_state = Dcmf(q_state);
+	Vector3f e_R = 0.5f * Dcmf(_R_sp.transpose()*_R_state - _R_state.transpose()*_R_sp).vee();
+	Vector3f r_R = -e_R.emult(_rotation_gain) - angular_velocity.emult(_angularVal_gain);
+	Vector3f _torque_sp = _Ib * r_R;
+
+	// std::cout << "_torque_sp: " << _torque_sp(0) << "  "<<_torque_sp(1) <<"  "<<_torque_sp(2)<<std::endl;
+
+	return _torque_sp;
+
+}
+//** MayurR */
 
 matrix::Vector3f AttitudeControl::update(const Quatf &q) const
 {
@@ -105,6 +158,9 @@ matrix::Vector3f AttitudeControl::update(const Quatf &q) const
 	for (int i = 0; i < 3; i++) {
 		rate_setpoint(i) = math::constrain(rate_setpoint(i), -_rate_limit(i), _rate_limit(i));
 	}
+
+	// std::cout << "rate_setpoint: " << rate_setpoint(0) << "  "<<rate_setpoint(1) <<"  "<<rate_setpoint(2)<<std::endl;
+
 
 	return rate_setpoint;
 }

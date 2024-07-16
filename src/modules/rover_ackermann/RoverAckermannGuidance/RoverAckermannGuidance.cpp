@@ -40,7 +40,6 @@ using namespace time_literals;
 
 RoverAckermannGuidance::RoverAckermannGuidance(ModuleParams *parent) : ModuleParams(parent)
 {
-	_rover_ackermann_guidance_status_pub.advertise();
 	updateParams();
 	pid_init(&_pid_throttle, PID_MODE_DERIVATIV_NONE, 0.001f);
 }
@@ -56,14 +55,13 @@ void RoverAckermannGuidance::updateParams()
 			   1); // Output limit
 }
 
-RoverAckermannGuidance::motor_setpoint RoverAckermannGuidance::purePursuit(const int nav_state)
+RoverAckermannGuidance::motor_setpoint RoverAckermannGuidance::purePursuit()
 {
 	// Initializations
 	float desired_speed{0.f};
 	float desired_steering{0.f};
 	float vehicle_yaw{0.f};
 	float actual_speed{0.f};
-	bool mission_finished{false};
 
 	// uORB subscriber updates
 	if (_vehicle_global_position_sub.updated()) {
@@ -86,12 +84,6 @@ RoverAckermannGuidance::motor_setpoint RoverAckermannGuidance::purePursuit(const
 		actual_speed = rover_velocity.norm();
 	}
 
-	if (_home_position_sub.updated()) {
-		home_position_s home_position{};
-		_home_position_sub.copy(&home_position);
-		_home_position = Vector2d(home_position.lat, home_position.lon);
-	}
-
 	if (_position_setpoint_triplet_sub.updated()) {
 		updateWaypoints();
 	}
@@ -106,58 +98,21 @@ RoverAckermannGuidance::motor_setpoint RoverAckermannGuidance::purePursuit(const
 	if (_mission_result_sub.updated()) {
 		mission_result_s mission_result{};
 		_mission_result_sub.copy(&mission_result);
-		mission_finished = mission_result.finished;
-	}
-
-	if (nav_state == vehicle_status_s::NAVIGATION_STATE_AUTO_RTL
-	    && get_distance_to_next_waypoint(_curr_pos(0), _curr_pos(1), _next_wp(0),
-					     _next_wp(1)) < _acceptance_radius) { // Return to launch
-		mission_finished = true;
+		_mission_finished = mission_result.finished;
 	}
 
 	// Guidance logic
-	if (!mission_finished) {
+	if (!_mission_finished) {
 		// Calculate desired speed
 		const float distance_to_prev_wp = get_distance_to_next_waypoint(_curr_pos(0), _curr_pos(1),
 						  _prev_wp(0),
 						  _prev_wp(1));
-		const float distance_to_curr_wp = get_distance_to_next_waypoint(_curr_pos(0), _curr_pos(1),
-						  _curr_wp(0),
-						  _curr_wp(1));
 
-		if (_param_ra_miss_vel_min.get() > 0.f  && _param_ra_miss_vel_min.get() < _param_ra_miss_vel_def.get()
-		    && _param_ra_miss_vel_gain.get() > FLT_EPSILON) { // Cornering slow down effect
-			if (distance_to_prev_wp <= _prev_acceptance_radius && _prev_acceptance_radius > FLT_EPSILON) {
-				const float cornering_speed = _param_ra_miss_vel_gain.get() / _prev_acceptance_radius;
-				desired_speed = math::constrain(cornering_speed, _param_ra_miss_vel_min.get(), _param_ra_miss_vel_def.get());
+		if (distance_to_prev_wp <= _prev_acc_rad) { // Cornering speed
+			const float cornering_speed = _param_ra_miss_vel_gain.get() / _prev_acc_rad;
+			desired_speed = math::constrain(cornering_speed, _param_ra_miss_vel_min.get(), _param_ra_miss_vel_def.get());
 
-			} else if (distance_to_curr_wp <= _acceptance_radius && _acceptance_radius > FLT_EPSILON) {
-				const float cornering_speed = _param_ra_miss_vel_gain.get() / _acceptance_radius;
-				desired_speed = math::constrain(cornering_speed, _param_ra_miss_vel_min.get(), _param_ra_miss_vel_def.get());
-
-			} else { // Straight line speed
-				if (_param_ra_max_accel.get() > FLT_EPSILON && _param_ra_max_jerk.get() > FLT_EPSILON
-				    && _acceptance_radius > FLT_EPSILON) {
-					float max_velocity{0.f};
-
-					if (nav_state == vehicle_status_s::NAVIGATION_STATE_AUTO_RTL) {
-						max_velocity = math::trajectory::computeMaxSpeedFromDistance(_param_ra_max_jerk.get(),
-								_param_ra_max_accel.get(), distance_to_curr_wp, 0.f);
-
-					} else {
-						const float cornering_speed = _param_ra_miss_vel_gain.get() / _acceptance_radius;
-						max_velocity = math::trajectory::computeMaxSpeedFromDistance(_param_ra_max_jerk.get(),
-								_param_ra_max_accel.get(), distance_to_curr_wp - _acceptance_radius, cornering_speed);
-					}
-
-					desired_speed = math::constrain(max_velocity, _param_ra_miss_vel_min.get(), _param_ra_miss_vel_def.get());
-
-				} else {
-					desired_speed = _param_ra_miss_vel_def.get();
-				}
-			}
-
-		} else {
+		} else { // Default mission speed
 			desired_speed = _param_ra_miss_vel_def.get();
 		}
 
@@ -169,9 +124,9 @@ RoverAckermannGuidance::motor_setpoint RoverAckermannGuidance::purePursuit(const
 	}
 
 	// Throttle PID
-	hrt_abstime timestamp_prev = _timestamp;
-	_timestamp = hrt_absolute_time();
-	const float dt = math::constrain(_timestamp - timestamp_prev, 1_ms, 5000_ms) * 1e-6f;
+	hrt_abstime now = hrt_absolute_time();
+	const float dt = math::min((now - _time_stamp_last), 5000_ms) / 1e6f;
+	_time_stamp_last = now;
 	float throttle = 0.f;
 
 	if (desired_speed < FLT_EPSILON) {
@@ -189,7 +144,8 @@ RoverAckermannGuidance::motor_setpoint RoverAckermannGuidance::purePursuit(const
 	}
 
 	// Publish ackermann controller status (logging)
-	_rover_ackermann_guidance_status.timestamp = _timestamp;
+	_rover_ackermann_guidance_status.timestamp = now;
+	_rover_ackermann_guidance_status.actual_speed = actual_speed;
 	_rover_ackermann_guidance_status.desired_speed = desired_speed;
 	_rover_ackermann_guidance_status.pid_throttle_integral = _pid_throttle.integral;
 	_rover_ackermann_guidance_status_pub.publish(_rover_ackermann_guidance_status);
@@ -209,12 +165,7 @@ void RoverAckermannGuidance::updateWaypoints()
 	_position_setpoint_triplet_sub.copy(&position_setpoint_triplet);
 
 	// Global waypoint coordinates
-	if (position_setpoint_triplet.current.valid) {
-		_curr_wp = Vector2d(position_setpoint_triplet.current.lat, position_setpoint_triplet.current.lon);
-
-	} else {
-		_curr_wp = Vector2d(0, 0);
-	}
+	_curr_wp = Vector2d(position_setpoint_triplet.current.lat, position_setpoint_triplet.current.lon);
 
 	if (position_setpoint_triplet.previous.valid) {
 		_prev_wp = Vector2d(position_setpoint_triplet.previous.lat, position_setpoint_triplet.previous.lon);
@@ -227,7 +178,7 @@ void RoverAckermannGuidance::updateWaypoints()
 		_next_wp = Vector2d(position_setpoint_triplet.next.lat, position_setpoint_triplet.next.lon);
 
 	} else {
-		_next_wp = _home_position; // Enables corner slow down with RTL
+		_next_wp = _curr_wp;
 	}
 
 	// Local waypoint coordinates
@@ -236,15 +187,9 @@ void RoverAckermannGuidance::updateWaypoints()
 	_next_wp_local = _global_local_proj_ref.project(_next_wp(0), _next_wp(1));
 
 	// Update acceptance radius
-	_prev_acceptance_radius = _acceptance_radius;
-
-	if (_param_ra_acc_rad_max.get() >= _param_nav_acc_rad.get()) {
-		_acceptance_radius = updateAcceptanceRadius(_curr_wp_local, _prev_wp_local, _next_wp_local, _param_nav_acc_rad.get(),
-				     _param_ra_acc_rad_gain.get(), _param_ra_acc_rad_max.get(), _param_ra_wheel_base.get(), _param_ra_max_steer_angle.get());
-
-	} else {
-		_acceptance_radius = _param_nav_acc_rad.get();
-	}
+	_prev_acc_rad = _acceptance_radius;
+	_acceptance_radius = updateAcceptanceRadius(_curr_wp_local, _prev_wp_local, _next_wp_local, _param_ra_acc_rad_def.get(),
+			     _param_ra_acc_rad_gain.get(), _param_ra_acc_rad_max.get(), _param_ra_wheel_base.get(), _param_ra_max_steer_angle.get());
 }
 
 float RoverAckermannGuidance::updateAcceptanceRadius(const Vector2f &curr_wp_local, const Vector2f &prev_wp_local,

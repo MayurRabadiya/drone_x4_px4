@@ -39,6 +39,8 @@
 #include <px4_platform_common/events.h>
 #include "PositionControl/ControlMath.hpp"
 
+#include <iostream>
+
 using namespace matrix;
 
 MulticopterPositionControl::MulticopterPositionControl(bool vtol) :
@@ -192,6 +194,16 @@ void MulticopterPositionControl::parameters_update(bool force)
 			events::send<float>(events::ID("mc_pos_ctrl_land_tilt_set"), events::Log::Warning,
 					    "Land tilt limit has been constrained by maximum tilt", _param_mpc_tiltmax_air.get());
 		}
+
+		//** MayurR */
+		_control.setPositionControlParam(Vector3f(_param_mc_kxx_gain.get(),_param_mc_kxy_gain.get(),_param_mc_kxz_gain.get()),
+						 Vector3f(_param_mc_kvx_gain.get(),_param_mc_kvy_gain.get(),_param_mc_kvz_gain.get()),
+						 Vector3f(_param_mc_kix_gain.get(),_param_mc_kiy_gain.get(),_param_mc_kiz_gain.get()),
+						 _param_mc_mass.get());
+
+		_drone_x4 = _param_ca_controller.get();
+		_px4_control = _param_mc_px4_controller.get();
+		//** MayurR */
 
 		_control.setPositionGains(Vector3f(_param_mpc_xy_p.get(), _param_mpc_xy_p.get(), _param_mpc_z_p.get()));
 		_control.setVelocityGains(
@@ -558,14 +570,23 @@ void MulticopterPositionControl::Run()
 
 			_control.setState(states);
 
+			//** MayurR */
+			bool custom_ctrl;
+			if (_px4_control == 1){_drone_x4 = 1;}
+
+			if (_drone_x4 == 1){custom_ctrl = true;}
+			else{custom_ctrl = false;}
+			//** MayurR */
+
+
 			// Run position control
-			if (!_control.update(dt)) {
+			if (!_control.update(dt, custom_ctrl)) { //** MayurR //
 				// Failsafe
 				_vehicle_constraints = {0, NAN, NAN, false, {}}; // reset constraints
 
 				_control.setInputSetpoint(generateFailsafeSetpoint(vehicle_local_position.timestamp_sample, states, true));
 				_control.setVelocityLimits(_param_mpc_xy_vel_max.get(), _param_mpc_z_vel_max_up.get(), _param_mpc_z_vel_max_dn.get());
-				_control.update(dt);
+				_control.update(dt, custom_ctrl); //** MayurR //
 			}
 
 			// Publish internal position control setpoints
@@ -579,6 +600,17 @@ void MulticopterPositionControl::Run()
 			// Publish attitude setpoint output
 			vehicle_attitude_setpoint_s attitude_setpoint{};
 			_control.getAttitudeSetpoint(attitude_setpoint);
+
+
+			//** MayurR //
+			attitude_setpoint.thrust_body[0] = local_pos_sp.thrust[0];
+			attitude_setpoint.thrust_body[1] = local_pos_sp.thrust[1];
+			attitude_setpoint.thrust_body[2] = local_pos_sp.thrust[2];
+			// MayurR **//
+
+
+			// std::cout << "attitude_setpoint_pos: " << attitude_setpoint.roll_body << "  "<<  attitude_setpoint.pitch_body <<"  "<<  attitude_setpoint.yaw_body <<std::endl;
+
 			attitude_setpoint.timestamp = hrt_absolute_time();
 			_vehicle_attitude_setpoint_pub.publish(attitude_setpoint);
 

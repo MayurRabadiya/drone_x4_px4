@@ -64,6 +64,23 @@ public:
 	 */
 	void setProportionalGain(const matrix::Vector3f &proportional_gain, const float yaw_weight);
 
+
+	//** MayurR */
+	/**
+	 * Set  attitude control gain
+	 * @param rotation_gain 3D vector containing gains for x, y, z
+	 * @param angularVal_gain 3D vector containing gains for x, y, z
+	 */
+	void setAtitttudeGain(const matrix::Vector3f &rotation_gain, const matrix::Vector3f &angularVal_gain);
+
+	/**
+	 * Set  Inertia matrix
+	 * @param inertia 3D vector containing inertial elemets for xx, yy, zz
+	 */
+	void setInertia(const matrix::Vector3f &inertia);
+	//** MayurR */
+
+
 	/**
 	 * Set hard limit for output rate setpoints
 	 * @param rate_limit [rad/s] 3D vector containing limits for roll, pitch, yaw
@@ -100,10 +117,21 @@ public:
 	 */
 	matrix::Vector3f update(const matrix::Quatf &q) const;
 
+
+	matrix::Vector3f update(const float dt, const matrix::Quatf &q_state, const matrix::Quatf &q_input, const matrix::Vector3f &angular_velocity); //** MayurR //
+
 private:
 	matrix::Vector3f _proportional_gain;
 	matrix::Vector3f _rate_limit;
 	float _yaw_w{0.f}; ///< yaw weight [0,1] to deprioritize caompared to roll and pitch
+
+	//** MayurR */
+	matrix::Quatf q_sp;
+	matrix::Vector3f _inertia;
+	matrix::Vector3f _rotation_gain;
+	matrix::Vector3f _angularVal_gain;
+	matrix::Vector3f _integral{0.0f, 0.0f, 0.0f};
+
 
 	matrix::Quatf _attitude_setpoint_q; ///< latest known attitude setpoint e.g. from position control
 	float _yawspeed_setpoint{0.f}; ///< latest known yawspeed feed-forward setpoint

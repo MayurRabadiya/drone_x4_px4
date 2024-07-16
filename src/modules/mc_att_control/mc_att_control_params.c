@@ -158,3 +158,33 @@ PARAM_DEFINE_FLOAT(MC_YAWRATE_MAX, 200.0f);
  * @group Multicopter Position Control
  */
 PARAM_DEFINE_FLOAT(MC_MAN_TILT_TAU, 0.0f);
+
+
+//** MayurR */
+
+/**
+ * Rotation error Gain
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(MC_KRX_GAIN, 0.0f);
+PARAM_DEFINE_FLOAT(MC_KRY_GAIN, 0.0f);
+PARAM_DEFINE_FLOAT(MC_KRZ_GAIN, 0.0f);
+
+/**
+ * Angular velocity gain
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(MC_KAX_GAIN, 0.0f);
+PARAM_DEFINE_FLOAT(MC_KAY_GAIN, 0.0f);
+PARAM_DEFINE_FLOAT(MC_KAZ_GAIN, 0.0f);
+
+/**
+ * Multicopter inertia
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(MC_INERTIA_XX, 0.0f);
+PARAM_DEFINE_FLOAT(MC_INERTIA_YY, 0.0f);
+PARAM_DEFINE_FLOAT(MC_INERTIA_ZZ, 0.0f);
+
+// PARAM_DEFINE_FLOAT(MC_PX4_CONTROL, 0.0f);
+//** MayurR */

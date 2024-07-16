@@ -51,6 +51,8 @@
 
 #include "AttitudeControl/AttitudeControlMath.hpp"
 
+#include <iostream>
+
 using namespace matrix;
 
 MulticopterAttitudeControl::MulticopterAttitudeControl(bool vtol) :
@@ -80,6 +82,13 @@ MulticopterAttitudeControl::init()
 		return false;
 	}
 
+	//** MayurR */
+	if (!_vehicle_angular_velocity_sub.registerCallback()) {
+		PX4_ERR("_vehicle_angular_velocity_sub callback registration failed");
+		return false;
+	}
+	//** MayurR */
+
 	return true;
 }
 
@@ -87,8 +96,17 @@ void
 MulticopterAttitudeControl::parameters_updated()
 {
 	// Store some of the parameters in a more convenient way & precompute often-used values
-	_attitude_control.setProportionalGain(Vector3f(_param_mc_roll_p.get(), _param_mc_pitch_p.get(), _param_mc_yaw_p.get()),
-					      _param_mc_yaw_weight.get());
+	_attitude_control.setProportionalGain(Vector3f(_param_mc_roll_p.get(), _param_mc_pitch_p.get(), _param_mc_yaw_p.get()), _param_mc_yaw_weight.get());
+
+	//** MayurR */
+	_attitude_control.setAtitttudeGain(Vector3f(_param_mc_krx_gain.get(), _param_mc_kry_gain.get(), _param_mc_krz_gain.get()),
+					   Vector3f(_param_mc_kax_gain.get(), _param_mc_kay_gain.get(), _param_mc_kaz_gain.get()));
+
+	_attitude_control.setInertia(Vector3f(_param_mc_inertia_xx.get(), _param_mc_inertia_yy.get(), _param_mc_inertia_zz.get()));
+
+	_drone_x4 = _param_ca_controller.get();
+	_px4_control = _param_mc_px4_controller.get();
+	//** MayurR */
 
 	// angular rate limits
 	using math::radians;
@@ -188,8 +206,10 @@ MulticopterAttitudeControl::generate_attitude_setpoint(const Quatf &q, float dt,
 	attitude_setpoint.pitch_body = euler_sp(1);
 	attitude_setpoint.yaw_body = euler_sp(2);
 
-	attitude_setpoint.thrust_body[2] = -throttle_curve(_manual_control_setpoint.throttle);
+	std::cout << "generate_attitude_setpoint: " << attitude_setpoint.roll_body << "  "<<attitude_setpoint.pitch_body <<"  "<<attitude_setpoint.yaw_body<<std::endl;
 
+
+	attitude_setpoint.thrust_body[2] = -throttle_curve(_manual_control_setpoint.throttle);
 	attitude_setpoint.timestamp = hrt_absolute_time();
 	_vehicle_attitude_setpoint_pub.publish(attitude_setpoint);
 }
@@ -199,6 +219,9 @@ MulticopterAttitudeControl::Run()
 {
 	if (should_exit()) {
 		_vehicle_attitude_sub.unregisterCallback();
+		//** MayurR */
+		_vehicle_angular_velocity_sub.unregisterCallback();
+		//** MayurR */
 		exit_and_cleanup();
 		return;
 	}
@@ -218,8 +241,8 @@ MulticopterAttitudeControl::Run()
 	// run controller on attitude updates
 	vehicle_attitude_s v_att;
 
-	if (_vehicle_attitude_sub.update(&v_att)) {
-
+	if (_vehicle_attitude_sub.update(&v_att))
+	 {
 		// Guard against too small (< 0.2ms) and too large (> 20ms) dt's.
 		const float dt = math::constrain(((v_att.timestamp_sample - _last_run) * 1e-6f), 0.0002f, 0.02f);
 		_last_run = v_att.timestamp_sample;
@@ -296,6 +319,8 @@ MulticopterAttitudeControl::Run()
 					_attitude_control.setAttitudeSetpoint(Quatf(vehicle_attitude_setpoint.q_d), vehicle_attitude_setpoint.yaw_sp_move_rate);
 					_thrust_setpoint_body = Vector3f(vehicle_attitude_setpoint.thrust_body);
 					_last_attitude_setpoint = vehicle_attitude_setpoint.timestamp;
+				// std::cout << "vehicle_attitude_setpoint: " << vehicle_attitude_setpoint.roll_body << "  "<<vehicle_attitude_setpoint.pitch_body <<"  "<<vehicle_attitude_setpoint.yaw_body<<std::endl;
+
 				}
 			}
 
@@ -314,7 +339,30 @@ MulticopterAttitudeControl::Run()
 				_quat_reset_counter = v_att.quat_reset_counter;
 			}
 
-			Vector3f rates_sp = _attitude_control.update(q);
+			//** MayurR */
+			Vector3f rates_sp;
+			if (_px4_control == 1){_drone_x4 = 1;}
+			if (_drone_x4 == 1)
+			{
+	 			vehicle_angular_velocity_s angular_velocity;
+				// std::cout << "attitude: " << attitude.roll_body << "  "<<attitude.pitch_body <<"  "<<attitude.yaw_body<<std::endl;
+
+
+				if (_vehicle_angular_velocity_sub.update(&angular_velocity))
+				{
+					Vector3f _angular_velocity =  Vector3f(angular_velocity.xyz);
+					Quatf q_input = Quatf(1.0, 0.0, 0.0, 0.0);
+					rates_sp = _attitude_control.update(dt, q, q_input, _angular_velocity);
+				}
+			}
+			else
+			{
+				rates_sp = _attitude_control.update(q);
+			}
+			//** MayurR */
+
+			// std::cout << "rates_sp: " << rates_sp(0) << "  "<<rates_sp(1) <<"  "<<rates_sp(2)<<std::endl;
+
 
 			const hrt_abstime now = hrt_absolute_time();
 			autotune_attitude_control_status_s pid_autotune;

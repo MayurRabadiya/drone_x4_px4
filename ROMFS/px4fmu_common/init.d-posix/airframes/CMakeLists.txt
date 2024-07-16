@@ -32,6 +32,7 @@
 ############################################################################
 
 px4_add_romfs_files(
+    7242_gz_tilting_drone_x4
 
 	1010_gazebo-classic_iris_opt_flow
 	1010_gazebo-classic_iris_opt_flow.post
@@ -83,7 +84,6 @@ px4_add_romfs_files(
 	4009_gz_r1_rover
 	4010_gz_x500_mono_cam
 	4011_gz_lawnmower
-	4012_gz_rover_ackermann
 
 	6011_gazebo-classic_typhoon_h480
 	6011_gazebo-classic_typhoon_h480.post

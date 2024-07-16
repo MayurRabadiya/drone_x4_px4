@@ -59,6 +59,10 @@
 
 #include <AttitudeControl.hpp>
 
+//** MayurR */
+#include <uORB/topics/vehicle_angular_velocity.h>
+
+
 using namespace time_literals;
 
 class MulticopterAttitudeControl : public ModuleBase<MulticopterAttitudeControl>, public ModuleParams,
@@ -106,6 +110,11 @@ private:
 	uORB::Subscription _vehicle_local_position_sub{ORB_ID(vehicle_local_position)};
 	uORB::Subscription _vehicle_status_sub{ORB_ID(vehicle_status)};
 
+	//** MayurR */
+	uORB::SubscriptionCallbackWorkItem _vehicle_angular_velocity_sub{this, ORB_ID(vehicle_angular_velocity)};
+	//** MayurR */
+
+
 	uORB::SubscriptionCallbackWorkItem _vehicle_attitude_sub{this, ORB_ID(vehicle_attitude)};
 
 	uORB::Publication<vehicle_rates_setpoint_s>     _vehicle_rates_setpoint_pub{ORB_ID(vehicle_rates_setpoint)};    /**< rate setpoint publication */
@@ -140,6 +149,12 @@ private:
 
 	uint8_t _quat_reset_counter{0};
 
+
+	//** MayurR */
+	int32_t _drone_x4{0};
+	int32_t _px4_control{0};
+	//** MayurR */
+
 	DEFINE_PARAMETERS(
 		(ParamInt<px4::params::MC_AIRMODE>)         _param_mc_airmode,
 		(ParamFloat<px4::params::MC_MAN_TILT_TAU>)  _param_mc_man_tilt_tau,
@@ -161,7 +176,27 @@ private:
 		(ParamFloat<px4::params::MPC_THR_HOVER>)    _param_mpc_thr_hover,       /**< throttle at stationary hover */
 		(ParamInt<px4::params::MPC_THR_CURVE>)      _param_mpc_thr_curve,       /**< throttle curve behavior */
 
-		(ParamFloat<px4::params::COM_SPOOLUP_TIME>) _param_com_spoolup_time
+		(ParamFloat<px4::params::COM_SPOOLUP_TIME>) _param_com_spoolup_time,
+
+		//** MayurR */
+		(ParamInt<px4::params::CA_CONTROLLER>) _param_ca_controller,
+
+		(ParamInt<px4::params::MC_PX4_CONTROL>) _param_mc_px4_controller,
+
+		(ParamFloat<px4::params::MC_KRX_GAIN>) _param_mc_krx_gain,
+		(ParamFloat<px4::params::MC_KRY_GAIN>) _param_mc_kry_gain,
+		(ParamFloat<px4::params::MC_KRZ_GAIN>) _param_mc_krz_gain,
+
+		(ParamFloat<px4::params::MC_KAX_GAIN>) _param_mc_kax_gain,
+		(ParamFloat<px4::params::MC_KAY_GAIN>) _param_mc_kay_gain,
+		(ParamFloat<px4::params::MC_KAZ_GAIN>) _param_mc_kaz_gain,
+
+		(ParamFloat<px4::params::MC_INERTIA_XX>) _param_mc_inertia_xx,
+		(ParamFloat<px4::params::MC_INERTIA_YY>) _param_mc_inertia_yy,
+		(ParamFloat<px4::params::MC_INERTIA_ZZ>) _param_mc_inertia_zz
+
+		//** MayurR */
+
 	)
 };
 

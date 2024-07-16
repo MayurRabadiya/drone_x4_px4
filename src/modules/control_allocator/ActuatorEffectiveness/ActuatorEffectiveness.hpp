@@ -74,7 +74,7 @@ public:
 	virtual ~ActuatorEffectiveness() = default;
 
 	static constexpr int NUM_ACTUATORS = 16;
-	static constexpr int NUM_AXES = 6;
+	static constexpr int NUM_AXES = 8; //MayurR
 
 	enum ControlAxis {
 		ROLL = 0,

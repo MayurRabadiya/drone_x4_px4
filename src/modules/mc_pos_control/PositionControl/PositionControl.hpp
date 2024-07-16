@@ -45,6 +45,9 @@
 #include <uORB/topics/vehicle_attitude_setpoint.h>
 #include <uORB/topics/vehicle_local_position_setpoint.h>
 
+#include <uORB/Subscription.hpp>
+#include <uORB/topics/vehicle_attitude.h>
+
 struct PositionControlStates {
 	matrix::Vector3f position;
 	matrix::Vector3f velocity;
@@ -155,7 +158,7 @@ public:
 	 * @param dt time in seconds since last iteration
 	 * @return true if update succeeded and output setpoint is executable, false if not
 	 */
-	bool update(const float dt);
+	bool update(const float dt, bool drone_x4); //** MayurR //
 
 	/**
 	 * Set the integral term in xy to 0.
@@ -184,6 +187,18 @@ public:
 	 */
 	void getAttitudeSetpoint(vehicle_attitude_setpoint_s &attitude_setpoint) const;
 
+	//** MayurR */
+	/**
+	 * Set the position control gains
+	 * @param P 3D vector of proportional gains for x,y,z axis
+	 * @param I 3D vector of integral gains
+	 * @param D 3D vector of derivative gains
+	 */
+	void setPositionControlParam(const matrix::Vector3f &P, const matrix::Vector3f &I, const matrix::Vector3f &D, const float &mass);
+	//** MayurR */
+
+
+
 	/**
 	 * All setpoints are set to NAN (uncontrolled). Timestampt zero.
 	 */
@@ -196,9 +211,15 @@ private:
 
 	bool _inputValid();
 
+	//** MayurR //
+	void _positionControlMR(const float dt);
+	//** MayurR */
+
 	void _positionControl(); ///< Position proportional control
 	void _velocityControl(const float dt); ///< Velocity PID control
 	void _accelerationControl(); ///< Acceleration setpoint processing
+
+	uORB::Subscription _attitude_sub {ORB_ID(vehicle_attitude)};
 
 	// Gains
 	matrix::Vector3f _gain_pos_p; ///< Position control proportional gain
@@ -232,4 +253,11 @@ private:
 	matrix::Vector3f _thr_sp; /**< desired thrust */
 	float _yaw_sp{}; /**< desired heading */
 	float _yawspeed_sp{}; /** desired yaw-speed */
+
+	//** MayurR */
+	matrix::Vector3f _position_gain;
+	matrix::Vector3f _velocity_gain;
+	matrix::Vector3f _integral_gain;
+	float _mass;
+	//** MayurR */
 };

@@ -42,6 +42,8 @@
 #include <px4_platform_common/defines.h>
 #include <geo/geo.h>
 
+#include <iostream>
+
 using namespace matrix;
 
 const trajectory_setpoint_s PositionControl::empty_trajectory_setpoint = {0, {NAN, NAN, NAN}, {NAN, NAN, NAN}, {NAN, NAN, NAN}, {NAN, NAN, NAN}, NAN, NAN};
@@ -103,15 +105,26 @@ void PositionControl::setInputSetpoint(const trajectory_setpoint_s &setpoint)
 	_acc_sp = Vector3f(setpoint.acceleration);
 	_yaw_sp = setpoint.yaw;
 	_yawspeed_sp = setpoint.yawspeed;
+
 }
 
-bool PositionControl::update(const float dt)
+bool PositionControl::update(const float dt, bool drone_x4)//** MayurR //
 {
 	bool valid = _inputValid();
 
 	if (valid) {
-		_positionControl();
-		_velocityControl(dt);
+
+		//** MayurR //
+		if (!drone_x4)
+		{
+			_positionControl();
+			_velocityControl(dt);
+		}
+		else
+		{
+			_positionControlMR(dt);
+		}
+		//MayurR **//
 
 		_yawspeed_sp = PX4_ISFINITE(_yawspeed_sp) ? _yawspeed_sp : 0.f;
 		_yaw_sp = PX4_ISFINITE(_yaw_sp) ? _yaw_sp : _yaw; // TODO: better way to disable yaw control
@@ -121,10 +134,60 @@ bool PositionControl::update(const float dt)
 	return valid && _acc_sp.isAllFinite() && _thr_sp.isAllFinite();
 }
 
+//** MayurR //
+void PositionControl::setPositionControlParam(const matrix::Vector3f &P, const matrix::Vector3f &I, const matrix::Vector3f &D, const float &mass)
+{
+	_position_gain = P;
+	_velocity_gain = D;
+	_integral_gain = I;
+	_mass = mass;
+}
+
+void PositionControl::_positionControlMR(const float dt)
+{
+	vehicle_attitude_s att;
+	_attitude_sub.update(&att);
+
+	Quaternionf att_q(att.q[0], att.q[1], att.q[2], att.q[3]);
+	Dcmf Rb(att_q);
+
+
+	// Vector3f e_p = _pos_sp - _pos;
+	// Vector3f e_v = _vel_sp - _vel;
+
+	// ControlMath::setZeroIfNanVector3f(e_p);
+	// ControlMath::setZeroIfNanVector3f(e_v);
+	// ControlMath::setZeroIfNanVector3f(_acc_sp);
+
+	// _vel_int += e_p * dt;
+	// _thr_sp = e_p.emult(_position_gain) + e_v.emult(_velocity_gain) + _vel_int.emult(_integral_gain) + _mass * Vector3f(0.0f, 0.0f, -CONSTANTS_ONE_G) + _acc_sp;
+	// _thr_sp = Rb.transpose() * _thr_sp;
+
+
+	Vector3f e_p = _pos - _pos_sp;
+
+	ControlMath::setZeroIfNanVector3f(e_p);
+	ControlMath::setZeroIfNanVector3f(_acc_sp);
+
+        Vector3f r_p = (-e_p.emult(_position_gain) - _vel.emult(_velocity_gain));
+
+        Vector3f r_p_g = r_p + Vector3f(0.0f, 0.0f, -CONSTANTS_ONE_G);
+        _thr_sp = Rb.transpose() * r_p_g * _mass;
+
+	// std::cout << "Rb: "<< Rb.transpose() << std::endl;
+	// std::cout << "_thrust_sp_1: " << _thr_sp(0) << "  " << _thr_sp(1) << "  " << _thr_sp(2) << std::endl;
+	// std::cout << "         e_p: " << e_p(0) << "  " << e_p(1) << "  " << e_p(2) << std::endl;
+	// std::cout << "       r_p_g: " << r_p_g(0) << "  " << r_p_g(1) << "  " << r_p_g(2) << std::endl;
+
+}
+// MayurR **//
+
+
 void PositionControl::_positionControl()
 {
 	// P-position controller
 	Vector3f vel_sp_position = (_pos_sp - _pos).emult(_gain_pos_p);
+
 	// Position and feed-forward velocity setpoints or position states being NAN results in them not having an influence
 	ControlMath::addIfNotNanVector3f(_vel_sp, vel_sp_position);
 	// make sure there are no NAN elements for further reference while constraining
@@ -212,13 +275,21 @@ void PositionControl::_accelerationControl()
 	}
 
 	Vector3f body_z = Vector3f(-_acc_sp(0), -_acc_sp(1), -z_specific_force).normalized();
+	// std::cout << "body_z: " << body_z(0) << "  " << body_z(1) << "  " << body_z(2) << std::endl;
+
+
 	ControlMath::limitTilt(body_z, Vector3f(0, 0, 1), _lim_tilt);
 	// Convert to thrust assuming hover thrust produces standard gravity
 	const float thrust_ned_z = _acc_sp(2) * (_hover_thrust / CONSTANTS_ONE_G) - _hover_thrust;
+
+	// std::cout << "thrust_ned_z: " << thrust_ned_z << std::endl;
 	// Project thrust to planned body attitude
 	const float cos_ned_body = (Vector3f(0, 0, 1).dot(body_z));
 	const float collective_thrust = math::min(thrust_ned_z / cos_ned_body, -_lim_thr_min);
+
+	// std::cout << "collective_thrust: "<< collective_thrust  << std::endl;
 	_thr_sp = body_z * collective_thrust;
+	// std::cout << "_thr_sp: " << _thr_sp(0) << "  " << _thr_sp(1) << "  " << _thr_sp(2) << std::endl;
 }
 
 bool PositionControl::_inputValid()

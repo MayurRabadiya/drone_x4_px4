@@ -189,8 +189,33 @@ private:
 
 		(ParamFloat<px4::params::MPC_XY_ERR_MAX>) _param_mpc_xy_err_max,
 		(ParamFloat<px4::params::MPC_YAWRAUTO_MAX>) _param_mpc_yawrauto_max,
-		(ParamFloat<px4::params::MPC_YAWRAUTO_ACC>) _param_mpc_yawrauto_acc
+		(ParamFloat<px4::params::MPC_YAWRAUTO_ACC>) _param_mpc_yawrauto_acc,
+
+		 //** MayurR */
+		(ParamInt<px4::params::CA_CONTROLLER>) _param_ca_controller,
+
+		(ParamInt<px4::params::MC_PX4_CONTROL>) _param_mc_px4_controller,
+
+		(ParamFloat<px4::params::MC_MASS>) _param_mc_mass,
+
+		(ParamFloat<px4::params::MC_KXX_GAIN>) _param_mc_kxx_gain,
+		(ParamFloat<px4::params::MC_KXY_GAIN>) _param_mc_kxy_gain,
+		(ParamFloat<px4::params::MC_KXZ_GAIN>) _param_mc_kxz_gain,
+
+		(ParamFloat<px4::params::MC_KVX_GAIN>) _param_mc_kvx_gain,
+		(ParamFloat<px4::params::MC_KVY_GAIN>) _param_mc_kvy_gain,
+		(ParamFloat<px4::params::MC_KVZ_GAIN>) _param_mc_kvz_gain,
+
+		(ParamFloat<px4::params::MC_KIX_GAIN>) _param_mc_kix_gain,
+		(ParamFloat<px4::params::MC_KIY_GAIN>) _param_mc_kiy_gain,
+		(ParamFloat<px4::params::MC_KIZ_GAIN>) _param_mc_kiz_gain
+		 //** MayurR */
 	);
+
+	//** MayurR */
+	int32_t _drone_x4{0};
+	int32_t _px4_control{0};
+	//** MayurR */
 
 	math::WelfordMean<float> _sample_interval_s{};
 

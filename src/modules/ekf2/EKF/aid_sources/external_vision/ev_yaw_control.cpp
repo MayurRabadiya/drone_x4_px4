@@ -38,9 +38,8 @@
 
 #include "ekf.h"
 
-void Ekf::controlEvYawFusion(const imuSample &imu_sample, const extVisionSample &ev_sample,
-			     const bool common_starting_conditions_passing, const bool ev_reset, const bool quality_sufficient,
-			     estimator_aid_source1d_s &aid_src)
+void Ekf::controlEvYawFusion(const extVisionSample &ev_sample, const bool common_starting_conditions_passing,
+			     const bool ev_reset, const bool quality_sufficient, estimator_aid_source1d_s &aid_src)
 {
 	static constexpr const char *AID_SRC_NAME = "EV yaw";
 
@@ -54,12 +53,12 @@ void Ekf::controlEvYawFusion(const imuSample &imu_sample, const extVisionSample 
 	computeYawInnovVarAndH(obs_var, innov_var, H_YAW);
 
 	updateAidSourceStatus(aid_src,
-			      ev_sample.time_us,                           // sample timestamp
-			      obs,                                         // observation
-			      obs_var,                                     // observation variance
-			      innov,                                       // innovation
-			      innov_var,                                   // innovation variance
-			      math::max(_params.heading_innov_gate, 1.f)); // innovation gate
+		ev_sample.time_us,                           // sample timestamp
+		obs,                                         // observation
+		obs_var,                                     // observation variance
+		innov,                                       // innovation
+		innov_var,                                   // innovation variance
+		math::max(_params.heading_innov_gate, 1.f)); // innovation gate
 
 	if (ev_reset) {
 		_control_status.flags.ev_yaw_fault = false;
@@ -192,11 +191,9 @@ void Ekf::controlEvYawFusion(const imuSample &imu_sample, const extVisionSample 
 void Ekf::stopEvYawFusion()
 {
 #if defined(CONFIG_EKF2_EXTERNAL_VISION)
-
 	if (_control_status.flags.ev_yaw) {
 
 		_control_status.flags.ev_yaw = false;
 	}
-
 #endif // CONFIG_EKF2_EXTERNAL_VISION
 }
