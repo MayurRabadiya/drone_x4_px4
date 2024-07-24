@@ -120,6 +120,7 @@ private:
 	//** MayurR */
 	param_t _drone_x4_handle;
 	int32_t _drone_x4{0};
+	matrix::Vector<float, NUM_ACTUATORS> servo_sp;
 	//** MayurR */
 
 	struct Params {

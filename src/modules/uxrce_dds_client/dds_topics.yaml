@@ -74,6 +74,12 @@ publications:
   - topic: /fmu/out/vehicle_trajectory_waypoint_desired
     type: px4_msgs::msg::VehicleTrajectoryWaypoint
 
+  - topic: /fmu/out/vehicle_thrust_setpoint
+    type: px4_msgs::msg::VehicleThrustSetpoint
+
+  - topic: /fmu/out/vehicle_torque_setpoint
+    type: px4_msgs::msg::VehicleTorqueSetpoint
+
 # Create uORB::Publication
 subscriptions:
   - topic: /fmu/in/register_ext_component_request
@@ -162,6 +168,12 @@ subscriptions:
 
   - topic: /fmu/in/aux_global_position
     type: px4_msgs::msg::VehicleGlobalPosition
+
+    ## MayurR ##
+  - topic: /fmu/in/tilting_drone_x4_attitude_setpoint
+    type: px4_msgs::msg::TiltingDroneX4AttitudeSetpoint
+    ## MayurR ##
+
 
 # Create uORB::PublicationMulti
 subscriptions_multi:

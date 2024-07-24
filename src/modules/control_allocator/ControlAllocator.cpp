@@ -454,7 +454,7 @@ ControlAllocator::Run()
 
 		matrix::Vector<float, NUM_ACTUATORS> vertical_actuator_sp;
 		matrix::Vector<float, NUM_ACTUATORS> actuator_sp;
-		matrix::Vector<float, NUM_ACTUATORS> servo_sp;
+
 
 
 		for (int i = 0; i < _num_control_allocation; ++i)
@@ -466,66 +466,66 @@ ControlAllocator::Run()
 
 				// Do allocation
 				_control_allocation[i]->allocate();
-				_actuator_effectiveness->allocateAuxilaryControls(dt, i, _control_allocation[i]->_actuator_sp); //flaps and spoilers
+				_actuator_effectiveness->allocateAuxilaryControls(dt, i, _control_allocation[i]->_actuator_sp); // flaps and spoilers
+				_actuator_effectiveness->updateSetpoint(c[i], i, _control_allocation[i]->_actuator_sp, _control_allocation[i]->getActuatorMin(), _control_allocation[i]->getActuatorMax());
+
 				vertical_actuator_sp = _control_allocation[i]->getActuatorSetpoint();
 
-				actuator_sp(0) = (sqrtf(powf(vertical_actuator_sp(0), 2) + powf(vertical_actuator_sp(1), 2)));
-				actuator_sp(1) = (sqrtf(powf(vertical_actuator_sp(2), 2) + powf(vertical_actuator_sp(3), 2)));
-				actuator_sp(2) = (sqrtf(powf(vertical_actuator_sp(4), 2) + powf(vertical_actuator_sp(5), 2)));
-				actuator_sp(3) = (sqrtf(powf(vertical_actuator_sp(6), 2) + powf(vertical_actuator_sp(7), 2)));
+				for (int j = 0; j < 4; j++)
+				{
+					actuator_sp(j) = (sqrtf(powf(vertical_actuator_sp(2 * j), 2) + powf(vertical_actuator_sp(2 * j + 1), 2)));
+					// servo_sp(j) = atan2f(vertical_actuator_sp(2 * j), vertical_actuator_sp(2 * j + 1));
+					servo_sp(j) = atan2f(vertical_actuator_sp(2 * j + 1), abs(vertical_actuator_sp(2 * j)));
+				}
 
-				servo_sp(0) = atan2f(vertical_actuator_sp(0), vertical_actuator_sp(1));
-				servo_sp(1) = atan2f(vertical_actuator_sp(2), vertical_actuator_sp(3));
-				servo_sp(2) = atan2f(vertical_actuator_sp(4), vertical_actuator_sp(5));
-				servo_sp(3) = atan2f(vertical_actuator_sp(6), vertical_actuator_sp(7));
+				// std::cout << "    vertical_actuator_sp_1: " << "  " << vertical_actuator_sp(0) << "  " << vertical_actuator_sp(2) << "  " << vertical_actuator_sp(4) << "  " << vertical_actuator_sp(6) << std::endl;
+				// std::cout << "    vertical_actuator_sp_2: " << "  " << vertical_actuator_sp(1) << "  " << vertical_actuator_sp(3) << "  " << vertical_actuator_sp(5) << "  " << vertical_actuator_sp(7) << std::endl;
 
 
-				// actuator_sp(0) = sqrtf(sqrtf(powf(vertical_actuator_sp(1), 2) + powf(vertical_actuator_sp(0), 2)));
-				// actuator_sp(1) = sqrtf(sqrtf(powf(vertical_actuator_sp(3), 2) + powf(vertical_actuator_sp(2), 2)));
-				// actuator_sp(2) = sqrtf(sqrtf(powf(vertical_actuator_sp(5), 2) + powf(vertical_actuator_sp(4), 2)));
-				// actuator_sp(3) = sqrtf(sqrtf(powf(vertical_actuator_sp(7), 2) + powf(vertical_actuator_sp(6), 2)));
-
-				// servo_sp(0) = atan2f(vertical_actuator_sp(1), vertical_actuator_sp(0));
-				// servo_sp(1) = atan2f(vertical_actuator_sp(3), vertical_actuator_sp(2));
-				// servo_sp(2) = atan2f(vertical_actuator_sp(5), vertical_actuator_sp(4));
-				// servo_sp(3) = atan2f(vertical_actuator_sp(7), vertical_actuator_sp(6));
 
 				if (_thrust_sp(2) > 82)
 				{
 					actuator_sp *= 0.0;
+					servo_sp *= 0.0;
 				}
 				else
 				{
-					actuator_sp /= 5;
+					actuator_sp /= 14.7;
+					servo_sp /= 3.1415926536;
+					// servo_sp *= 0.0;
 				}
 				_control_allocation[0]->setActuatorSetpoint(actuator_sp);
-				_actuator_effectiveness->updateSetpoint(c[i], i, _control_allocation[i]->_actuator_sp,
-									_control_allocation[i]->getActuatorMin(), _control_allocation[i]->getActuatorMax());
 
-				if (_has_slew_rate) {
+				if (_has_slew_rate)
+				{
 					_control_allocation[i]->applySlewRateLimit(dt);
 				}
 
 				_control_allocation[i]->clipActuatorSetpoint();
 
-				// std::cout << " vertical_actuator_sp_0: " <<"  "<< vertical_actuator_sp(0)<<"  "<<vertical_actuator_sp(2)<<"  "<<vertical_actuator_sp(4)<<"  "<<vertical_actuator_sp(6)<<std::endl;
-				// std::cout << " vertical_actuator_sp_1: " <<"  "<< vertical_actuator_sp(1)<<"  "<<vertical_actuator_sp(3)<<"  "<<vertical_actuator_sp(5)<<"  "<<vertical_actuator_sp(7)<<std::endl;
+				// std::cout << "    servo_sp: " << "  " << servo_sp(0) << "  " << servo_sp(1) << "  " << servo_sp(2) << "  " << servo_sp(3) << std::endl;
 
-				std::cout << " actuator_sp: " <<"  "<< actuator_sp(0)<<"  "<<actuator_sp(1)<<"  "<<actuator_sp(2)<<"  "<<actuator_sp(3)<<std::endl;
-				std::cout << "    servo_sp: " <<"  "<< servo_sp(0)<<"  "<<servo_sp(1)<<"  "<<servo_sp(2)<<"  "<<servo_sp(3)<<std::endl;
+				std::cout << " actuator_sp: " << "  " << actuator_sp(0) << "  " << actuator_sp(1) << "  " << actuator_sp(2) << "  " << actuator_sp(3) << std::endl;
+				// std::cout << std::endl;
 
-			}//** MayurR */
+
+			} //** MayurR */
 			else
 			{
 				_control_allocation[i]->setControlSetpoint(c[i]);
 
 				// Do allocation
 				_control_allocation[i]->allocate();
-				_actuator_effectiveness->allocateAuxilaryControls(dt, i, _control_allocation[i]->_actuator_sp); //flaps and spoilers
+				_actuator_effectiveness->allocateAuxilaryControls(dt, i, _control_allocation[i]->_actuator_sp); // flaps and spoilers
 				_actuator_effectiveness->updateSetpoint(c[i], i, _control_allocation[i]->_actuator_sp,
 									_control_allocation[i]->getActuatorMin(), _control_allocation[i]->getActuatorMax());
 
-				if (_has_slew_rate) {
+				vertical_actuator_sp = _control_allocation[i]->getActuatorSetpoint();
+				std::cout << " actuator_sp: " << "  " << vertical_actuator_sp(0) << "  " << vertical_actuator_sp(1) << "  " << vertical_actuator_sp(2) << "  " << vertical_actuator_sp(3) << std::endl;
+
+
+				if (_has_slew_rate)
+				{
 					_control_allocation[i]->applySlewRateLimit(dt);
 				}
 
@@ -782,6 +782,23 @@ ControlAllocator::publish_actuator_controls()
 
 	// std::cout << "actuator_motors:  " << actuator_motors.control[0] << "  " << actuator_motors.control[1] << "  " << actuator_motors.control[2] << "  " << actuator_motors.control[3] <<std::endl;
 	_actuator_motors_pub.publish(actuator_motors);
+
+	//** MayurR */
+	if (_drone_x4 == 1)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			actuator_servos.control[j] = servo_sp(j);
+		}
+
+		for (int i = 4; i < 8; i++)
+		{
+			actuator_servos.control[i] = NAN;
+		}
+
+		_actuator_servos_pub.publish(actuator_servos);
+	}
+	//** MayurR */
 
 	// servos
 	if (_num_actuators[1] > 0) {

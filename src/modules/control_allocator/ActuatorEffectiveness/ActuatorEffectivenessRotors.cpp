@@ -214,13 +214,18 @@ int ActuatorEffectivenessRotors::computeEffectivenessMatrix(const Geometry &geom
 		else
 		{
 			//** MayurR */
-			// float l = 1.0;       // rotor arm length
-			float l = 0.26;       // rotor arm length
-			float p = 0.707106781;
-			// float kt = 4.23e-06; // drage constant
-			// float kf = 0.0026;   // force constant
-			// float del = kt / kf;
-			float del = 1.1765e-038;
+			// float l = 1.0f;       // rotor arm length
+			float l = 0.186f;       // rotor arm length
+			float p = 0.707106781f;
+
+			// float kf = 4.9715e-05; // drage constant
+			// float kt =  0.00305;   // force constant
+
+			float kt = 0.016f; // drage constant
+			float kf =  8.54858e-06f;   // force constant
+
+			float del = kt / kf;
+			// float del = 1.1765e-038;
 
 			effectiveness(0, 0) = p;
 			effectiveness(1, 0) = -p;
@@ -285,7 +290,7 @@ int ActuatorEffectivenessRotors::computeEffectivenessMatrix(const Geometry &geom
 
 			// float m = 0.4;
 			// float n = 0.01;
-			
+
 
 
 			// effectiveness(0, 0) = 0;

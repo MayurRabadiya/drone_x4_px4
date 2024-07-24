@@ -117,8 +117,9 @@ public:
 	 */
 	matrix::Vector3f update(const matrix::Quatf &q) const;
 
-
+	//** MayurR */
 	matrix::Vector3f update(const float dt, const matrix::Quatf &q_state, const matrix::Quatf &q_input, const matrix::Vector3f &angular_velocity); //** MayurR //
+	//** MayurR */
 
 private:
 	matrix::Vector3f _proportional_gain;

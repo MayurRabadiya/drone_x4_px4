@@ -79,6 +79,8 @@ matrix::Vector3f AttitudeControl::update(const float dt, const Quatf &q_state, c
 	_Ib(1, 1) = _inertia(1);
 	_Ib(2, 2) = _inertia(2);
 	q_sp = q_input;
+	q_sp.normalize();
+	q_state.normalized();
 
 	// Quaternionf q1 = (q_sp).normalized();
 	// Quaternionf q2 = (q_state).inversed().normalized();
@@ -97,6 +99,7 @@ matrix::Vector3f AttitudeControl::update(const float dt, const Quatf &q_state, c
 	Vector3f e_R = 0.5f * Dcmf(_R_sp.transpose()*_R_state - _R_state.transpose()*_R_sp).vee();
 	Vector3f r_R = -e_R.emult(_rotation_gain) - angular_velocity.emult(_angularVal_gain);
 	Vector3f _torque_sp = _Ib * r_R;
+
 
 	// std::cout << "_torque_sp: " << _torque_sp(0) << "  "<<_torque_sp(1) <<"  "<<_torque_sp(2)<<std::endl;
 

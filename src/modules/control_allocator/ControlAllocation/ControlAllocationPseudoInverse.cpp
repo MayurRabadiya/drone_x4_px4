@@ -174,10 +174,36 @@ ControlAllocationPseudoInverse::normalizeControlAllocationMatrix()
 void
 ControlAllocationPseudoInverse::allocate()
 {
-	//Compute new gains if needed
+	// Compute new gains if needed
 	updatePseudoInverse();
 
 	_prev_actuator_sp = _actuator_sp;
+
+	// double l = 0.183; // rotor arm length
+	// double p = sqrt(2.0);
+	// double kf = 0.026; // force constant
+	// double alpha = kf / l;
+	// double beta = 1.0 / (2 * l * l + kf * kf);
+
+	// double values[8][6] = {
+	// 	{-alpha, -alpha, 1.0, -1.0 / l, -1.0 / l, -kf * beta},
+	// 	{-p, -p, 0.0, 0.0, 0.0, -p * l * beta},
+	// 	{-alpha, alpha, 1.0, 1.0 / l, -1.0 / l, kf * beta},
+	// 	{p, -p, 0.0, 0.0, 0.0, -p * l * beta},
+	// 	{alpha, alpha, 1.0, 1.0 / l, 1.0 / l, -kf * beta},
+	// 	{p, p, 0.0, 0.0, 0.0, -p * l * beta},
+	// 	{alpha, -alpha, 1.0, -1.0 / l, 1.0 / l, kf * beta},
+	// 	{-p, p, 0.0, 0.0, 0.0, -p * l * beta}};
+
+	// // Populate _mix matrix
+	// for (int i = 0; i < 8; ++i)
+	// {
+	// 	for (int j = 0; j < 6; ++j)
+	// 	{
+	// 		_mix(i, j) = values[i][j];
+	// 	}
+	// }
+	// _mix *= 0.25;
 
 	// Allocate
 	_actuator_sp = _actuator_trim + _mix * (_control_sp - _control_trim);

@@ -404,8 +404,8 @@ void MulticopterPositionControl::Run()
 	vehicle_local_position_s vehicle_local_position;
 
 	if (_local_pos_sub.update(&vehicle_local_position)) {
-		const float dt =
-			math::constrain(((vehicle_local_position.timestamp_sample - _time_stamp_last_loop) * 1e-6f), 0.002f, 0.04f);
+	
+		const float dt = math::constrain(((vehicle_local_position.timestamp_sample - _time_stamp_last_loop) * 1e-6f), 0.002f, 0.04f);
 		_time_stamp_last_loop = vehicle_local_position.timestamp_sample;
 
 		_sample_interval_s.update(dt);
@@ -552,6 +552,8 @@ void MulticopterPositionControl::Run()
 				max_speed_xy,
 				math::min(speed_up, _param_mpc_z_vel_max_up.get()), // takeoff ramp starts with negative velocity limit
 				math::max(speed_down, 0.f));
+
+			// std::cout << "attitude_setpoint_pos: " << _setpoint.acceleration[0]  << "  "<<  _setpoint.acceleration[1]  <<"  "<<  _setpoint.acceleration[2] <<std::endl;
 
 			_control.setInputSetpoint(_setpoint);
 

@@ -86,8 +86,7 @@ void PositionControl::updateHoverThrust(const float hover_thrust_new)
 	const float previous_hover_thrust = _hover_thrust;
 	setHoverThrust(hover_thrust_new);
 
-	_vel_int(2) += (_acc_sp(2) - CONSTANTS_ONE_G) * previous_hover_thrust / _hover_thrust
-		       + CONSTANTS_ONE_G - _acc_sp(2);
+	_vel_int(2) += (_acc_sp(2) - CONSTANTS_ONE_G) * previous_hover_thrust / _hover_thrust + CONSTANTS_ONE_G - _acc_sp(2);
 }
 
 void PositionControl::setState(const PositionControlStates &states)
@@ -105,14 +104,14 @@ void PositionControl::setInputSetpoint(const trajectory_setpoint_s &setpoint)
 	_acc_sp = Vector3f(setpoint.acceleration);
 	_yaw_sp = setpoint.yaw;
 	_yawspeed_sp = setpoint.yawspeed;
-
 }
 
-bool PositionControl::update(const float dt, bool drone_x4)//** MayurR //
+bool PositionControl::update(const float dt, bool drone_x4) //** MayurR //
 {
 	bool valid = _inputValid();
 
-	if (valid) {
+	if (valid)
+	{
 
 		//** MayurR //
 		if (!drone_x4)
@@ -124,7 +123,7 @@ bool PositionControl::update(const float dt, bool drone_x4)//** MayurR //
 		{
 			_positionControlMR(dt);
 		}
-		//MayurR **//
+		// MayurR **//
 
 		_yawspeed_sp = PX4_ISFINITE(_yawspeed_sp) ? _yawspeed_sp : 0.f;
 		_yaw_sp = PX4_ISFINITE(_yaw_sp) ? _yaw_sp : _yaw; // TODO: better way to disable yaw control
@@ -135,7 +134,7 @@ bool PositionControl::update(const float dt, bool drone_x4)//** MayurR //
 }
 
 //** MayurR //
-void PositionControl::setPositionControlParam(const matrix::Vector3f &P, const matrix::Vector3f &I, const matrix::Vector3f &D, const float &mass)
+void PositionControl::setPositionControlParam(const matrix::Vector3f &P, const matrix::Vector3f &D, const matrix::Vector3f &I, const float &mass)
 {
 	_position_gain = P;
 	_velocity_gain = D;
@@ -151,6 +150,9 @@ void PositionControl::_positionControlMR(const float dt)
 	Quaternionf att_q(att.q[0], att.q[1], att.q[2], att.q[3]);
 	Dcmf Rb(att_q);
 
+	ControlMath::setZeroIfNanVector3f(_pos_sp);
+
+//**=============================================================================================================================================================================== */
 
 	// Vector3f e_p = _pos_sp - _pos;
 	// Vector3f e_v = _vel_sp - _vel;
@@ -163,33 +165,63 @@ void PositionControl::_positionControlMR(const float dt)
 	// _thr_sp = e_p.emult(_position_gain) + e_v.emult(_velocity_gain) + _vel_int.emult(_integral_gain) + _mass * Vector3f(0.0f, 0.0f, -CONSTANTS_ONE_G) + _acc_sp;
 	// _thr_sp = Rb.transpose() * _thr_sp;
 
+//**=============================================================================================================================================================================== */
+
+
+	// Vector3f e_p = _pos - _pos_sp;
+
+	// ControlMath::setZeroIfNanVector3f(e_p);
+	// ControlMath::setZeroIfNanVector3f(_acc_sp);
+
+	// Vector3f r_p = (-e_p.emult(_position_gain) - _vel.emult(_velocity_gain)) + _mass * Vector3f(0.0f, 0.0f, -CONSTANTS_ONE_G);
+	// // Vector3f r_p = (-e_p.emult(_position_gain) - _vel.emult(_velocity_gain));
+
+	// Vector3f r_p_g = r_p;
+	// _thr_sp = Rb.transpose() * r_p_g ;
+
 
 	Vector3f e_p = _pos - _pos_sp;
 
 	ControlMath::setZeroIfNanVector3f(e_p);
 	ControlMath::setZeroIfNanVector3f(_acc_sp);
 
-        Vector3f r_p = (-e_p.emult(_position_gain) - _vel.emult(_velocity_gain));
+	Vector3f r_p = (-e_p.emult(_position_gain) - _vel.emult(_velocity_gain)) + Vector3f(0.0f, 0.0f, -CONSTANTS_ONE_G);
+	_thr_sp = _mass * Rb.transpose() * r_p ;
 
-        Vector3f r_p_g = r_p + Vector3f(0.0f, 0.0f, -CONSTANTS_ONE_G);
-        _thr_sp = Rb.transpose() * r_p_g * _mass;
+
+	if (_pos_sp(2) >= 0.0f)
+	{
+		_thr_sp *= 0;
+	}
+
+//**=============================================================================================================================================================================== */
+
+	std::cout << std::endl;
 
 	// std::cout << "Rb: "<< Rb.transpose() << std::endl;
-	// std::cout << "_thrust_sp_1: " << _thr_sp(0) << "  " << _thr_sp(1) << "  " << _thr_sp(2) << std::endl;
-	// std::cout << "         e_p: " << e_p(0) << "  " << e_p(1) << "  " << e_p(2) << std::endl;
-	// std::cout << "       r_p_g: " << r_p_g(0) << "  " << r_p_g(1) << "  " << r_p_g(2) << std::endl;
+	std::cout << "_thrust_sp_1: " << _thr_sp(0) << "  " << _thr_sp(1) << "  " << _thr_sp(2) << std::endl;
+	// std::cout << "         e_p: " <<   e_p(0) << "  " <<   e_p(1) << "  " <<   e_p(2) << std::endl;
+	// std::cout << "        _pos: " <<   _pos(0) << "  " <<   _pos(1) << "  " <<   _pos(2) << std::endl;
+
+	// std::cout << "         e_v: " <<       e_v(0) << "  " <<       e_v(1) << "  " <<       e_v(2) << std::endl;
+	std::cout << "        r_p: " <<    r_p(0) << "  " <<    r_p(1) << "  " <<    r_p(2) << std::endl;
+
+
+
+	std::cout << std::endl;
 
 }
 // MayurR **//
-
 
 void PositionControl::_positionControl()
 {
 	// P-position controller
 	Vector3f vel_sp_position = (_pos_sp - _pos).emult(_gain_pos_p);
 
+
 	// Position and feed-forward velocity setpoints or position states being NAN results in them not having an influence
 	ControlMath::addIfNotNanVector3f(_vel_sp, vel_sp_position);
+
 	// make sure there are no NAN elements for further reference while constraining
 	ControlMath::setZeroIfNanVector3f(vel_sp_position);
 
@@ -216,7 +248,8 @@ void PositionControl::_velocityControl(const float dt)
 
 	// Integrator anti-windup in vertical direction
 	if ((_thr_sp(2) >= -_lim_thr_min && vel_error(2) >= 0.f) ||
-	    (_thr_sp(2) <= -_lim_thr_max && vel_error(2) <= 0.f)) {
+		(_thr_sp(2) <= -_lim_thr_max && vel_error(2) <= 0.f))
+	{
 		vel_error(2) = 0.f;
 	}
 
@@ -236,12 +269,14 @@ void PositionControl::_velocityControl(const float dt)
 	const float thrust_max_xy_squared = thrust_max_squared - math::sq(_thr_sp(2));
 	float thrust_max_xy = 0.f;
 
-	if (thrust_max_xy_squared > 0.f) {
+	if (thrust_max_xy_squared > 0.f)
+	{
 		thrust_max_xy = sqrtf(thrust_max_xy_squared);
 	}
 
 	// Saturate thrust in horizontal direction
-	if (thrust_sp_xy_norm > thrust_max_xy) {
+	if (thrust_sp_xy_norm > thrust_max_xy)
+	{
 		_thr_sp.xy() = thrust_sp_xy / thrust_sp_xy_norm * thrust_max_xy;
 	}
 
@@ -254,8 +289,8 @@ void PositionControl::_velocityControl(const float dt)
 	// The ARW loop needs to run if the signal is saturated only.
 	const Vector2f acc_sp_xy = _acc_sp.xy();
 	const Vector2f acc_limited_xy = (acc_sp_xy.norm_squared() > acc_sp_xy_produced.norm_squared())
-					? acc_sp_xy_produced
-					: acc_sp_xy;
+										? acc_sp_xy_produced
+										: acc_sp_xy;
 	vel_error.xy() = Vector2f(vel_error) - arw_gain * (acc_sp_xy - acc_limited_xy);
 
 	// Make sure integral doesn't get NAN
@@ -269,14 +304,14 @@ void PositionControl::_accelerationControl()
 	// Assume standard acceleration due to gravity in vertical direction for attitude generation
 	float z_specific_force = -CONSTANTS_ONE_G;
 
-	if (!_decouple_horizontal_and_vertical_acceleration) {
+	if (!_decouple_horizontal_and_vertical_acceleration)
+	{
 		// Include vertical acceleration setpoint for better horizontal acceleration tracking
 		z_specific_force += _acc_sp(2);
 	}
 
 	Vector3f body_z = Vector3f(-_acc_sp(0), -_acc_sp(1), -z_specific_force).normalized();
 	// std::cout << "body_z: " << body_z(0) << "  " << body_z(1) << "  " << body_z(2) << std::endl;
-
 
 	ControlMath::limitTilt(body_z, Vector3f(0, 0, 1), _lim_tilt);
 	// Convert to thrust assuming hover thrust produces standard gravity
@@ -297,7 +332,8 @@ bool PositionControl::_inputValid()
 	bool valid = true;
 
 	// Every axis x, y, z needs to have some setpoint
-	for (int i = 0; i <= 2; i++) {
+	for (int i = 0; i <= 2; i++)
+	{
 		valid = valid && (PX4_ISFINITE(_pos_sp(i)) || PX4_ISFINITE(_vel_sp(i)) || PX4_ISFINITE(_acc_sp(i)));
 	}
 
@@ -307,12 +343,15 @@ bool PositionControl::_inputValid()
 	valid = valid && (PX4_ISFINITE(_acc_sp(0)) == PX4_ISFINITE(_acc_sp(1)));
 
 	// For each controlled state the estimate has to be valid
-	for (int i = 0; i <= 2; i++) {
-		if (PX4_ISFINITE(_pos_sp(i))) {
+	for (int i = 0; i <= 2; i++)
+	{
+		if (PX4_ISFINITE(_pos_sp(i)))
+		{
 			valid = valid && PX4_ISFINITE(_pos(i));
 		}
 
-		if (PX4_ISFINITE(_vel_sp(i))) {
+		if (PX4_ISFINITE(_vel_sp(i)))
+		{
 			valid = valid && PX4_ISFINITE(_vel(i)) && PX4_ISFINITE(_vel_dot(i));
 		}
 	}

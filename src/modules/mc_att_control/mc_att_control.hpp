@@ -61,6 +61,8 @@
 
 //** MayurR */
 #include <uORB/topics/vehicle_angular_velocity.h>
+#include <uORB/topics/tilting_drone_x4_attitude_setpoint.h>
+//** MayurR */
 
 
 using namespace time_literals;
@@ -111,9 +113,9 @@ private:
 	uORB::Subscription _vehicle_status_sub{ORB_ID(vehicle_status)};
 
 	//** MayurR */
+	uORB::Subscription _tilting_drone_x4_attitude_setpoint_sub{ORB_ID(tilting_drone_x4_attitude_setpoint)};
 	uORB::SubscriptionCallbackWorkItem _vehicle_angular_velocity_sub{this, ORB_ID(vehicle_angular_velocity)};
 	//** MayurR */
-
 
 	uORB::SubscriptionCallbackWorkItem _vehicle_attitude_sub{this, ORB_ID(vehicle_attitude)};
 
