@@ -113,6 +113,7 @@ include(px4_parse_function_args)
 include(px4_git)
 
 execute_process(
+	COMMAND git tag -a v1.14.3 -m "Release version v1.14.3"
 	COMMAND git describe --exclude ext/* --always --tags
 	OUTPUT_VARIABLE PX4_GIT_TAG
 	OUTPUT_STRIP_TRAILING_WHITESPACE
@@ -120,21 +121,30 @@ execute_process(
 	)
 
 # git describe to X.Y.Z version
-string(REPLACE "." ";" VERSION_LIST ${PX4_GIT_TAG})
-
-# major version
-list(GET VERSION_LIST 0 PX4_VERSION_MAJOR)
-string(REPLACE "v" "" PX4_VERSION_MAJOR ${PX4_VERSION_MAJOR})
-# minor version
-list(GET VERSION_LIST 1 PX4_VERSION_MINOR)
-# patch version
-list(GET VERSION_LIST 2 PX4_VERSION_PATCH)
-string(REPLACE "-" ";" PX4_VERSION_PATCH ${PX4_VERSION_PATCH})
-list(GET PX4_VERSION_PATCH 0 PX4_VERSION_PATCH)
+if(PX4_GIT_TAG MATCHES "^v[0-9]+\\.[0-9]+\\.[0-9]+")
+    string(REPLACE "." ";" VERSION_LIST ${PX4_GIT_TAG})
+    # major version
+    list(GET VERSION_LIST 0 PX4_VERSION_MAJOR)
+    string(REPLACE "v" "" PX4_VERSION_MAJOR ${PX4_VERSION_MAJOR})
+    # minor version
+    list(GET VERSION_LIST 1 PX4_VERSION_MINOR)
+    # patch version
+    list(GET VERSION_LIST 2 PX4_VERSION_PATCH)
+    string(REPLACE "-" ";" PX4_VERSION_PATCH ${PX4_VERSION_PATCH})
+    list(GET PX4_VERSION_PATCH 0 PX4_VERSION_PATCH)
+else()
+    message(WARNING "PX4_GIT_TAG is not in expected format: ${PX4_GIT_TAG}")
+    set(PX4_VERSION_MAJOR "v1")
+    set(PX4_VERSION_MINOR "14")
+    set(PX4_VERSION_PATCH "3")
+endif()
 
 # # Capture only the hash part after 'g'
 string(REGEX MATCH "g([a-f0-9]+)$" GIT_HASH "${PX4_GIT_TAG}")
 set(PX4_GIT_HASH ${CMAKE_MATCH_1})
+
+message(STATUS "PX4 Version: ${PX4_VERSION_MAJOR}.${PX4_VERSION_MINOR}.${PX4_VERSION_PATCH}")
+message(STATUS "PX4 Git Hash: ${PX4_GIT_HASH}")
 
 define_property(GLOBAL PROPERTY PX4_MODULE_LIBRARIES
                  BRIEF_DOCS "PX4 module libs"
