@@ -218,11 +218,11 @@ int ActuatorEffectivenessRotors::computeEffectivenessMatrix(const Geometry &geom
 			float l = 0.186f;       // rotor arm length
 			float p = 0.707106781f;
 
-			// float kf = 4.9715e-05; // drage constant
-			// float kt =  0.00305;   // force constant
+			float kt = 4.9715e-05; // drage constant
+			float kf =  0.00305;   // force constant
 
-			float kt = 0.016f; // drage constant
-			float kf =  8.54858e-06f;   // force constant
+			// float kt = 0.016f; // drage constant
+			// float kf =  8.54858e-06f;   // force constant
 
 			float del = kt / kf;
 			// float del = 1.1765e-038;

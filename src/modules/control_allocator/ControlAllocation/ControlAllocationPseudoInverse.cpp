@@ -59,8 +59,8 @@ ControlAllocationPseudoInverse::updatePseudoInverse()
 {
 	if (_mix_update_needed) {
 		matrix::geninv(_effectiveness, _mix);
-		// std::cout<<"_effectiveness:" << _effectiveness << std::endl;
-		// std::cout<<"_mix :" << _mix << std::endl;
+		std::cout<<"_effectiveness:" << _effectiveness << std::endl;
+		std::cout<<"_mix :" << _mix << std::endl;
 
 		if (_normalization_needs_update && !_had_actuator_failure) {
 			updateControlAllocationMatrixScale();
@@ -181,7 +181,7 @@ ControlAllocationPseudoInverse::allocate()
 
 	// double l = 0.183; // rotor arm length
 	// double p = sqrt(2.0);
-	// double kf = 0.026; // force constant
+	// double kf = 8.54858e-06f; // force constant
 	// double alpha = kf / l;
 	// double beta = 1.0 / (2 * l * l + kf * kf);
 
@@ -204,6 +204,25 @@ ControlAllocationPseudoInverse::allocate()
 	// 	}
 	// }
 	// _mix *= 0.25;
+
+
+
+	double values[8][6] = {	{0.3536,   -0.3536,         0,         0,         0,   -0.9615},
+				{0.0000,   -0.0000,    0.2500,    1.3598,   -1.3598,   -0.0000},
+				{0.3536,    0.3536,         0,         0,         0,   -0.9615},
+			        {-0.0000,   -0.0000,    0.2500,    1.3598,    1.3598,    0.0000},
+			        {-0.3536,    0.3536,         0,         0,         0,   -0.9615},
+			        {-0.0000,    0.0000,    0.2500,   -1.3598,    1.3598,   -0.0000},
+			        {-0.3536,   -0.3536,         0,         0,         0,   -0.9615},
+				{0.0000 ,   0.0000,    0.2500,   -1.3598,   -1.3598,    0.0000}};
+
+		for (int i = 0; i < 8; ++i)
+	{
+		for (int j = 0; j < 6; ++j)
+		{
+			_mix(i, j) = values[i][j];
+		}
+	}
 
 	// Allocate
 	_actuator_sp = _actuator_trim + _mix * (_control_sp - _control_trim);

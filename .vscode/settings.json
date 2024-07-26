@@ -127,7 +127,8 @@
         "search.showLineNumbers": true,
         "terminal.integrated.scrollback": 15000,
         "yaml.schemas": {
-                "${workspaceFolder}/validation/module_schema.yaml": "${workspaceFolder}/src/modules/*/module.yaml"
+                "${workspaceFolder}/validation/module_schema.yaml": "${workspaceFolder}/src/modules/*/module.yaml",
+                "https://json.schemastore.org/sourcehut-build-0.65.0.json": "file:///home/mayur/Downloads/workspace/drone_x4_px4/ROMFS/px4fmu_common/init.d-posix/airframes/7242_gz_tilting_drone_x4"
         },
         "ros.distro": "humble",
         "python.autoComplete.extraPaths": [

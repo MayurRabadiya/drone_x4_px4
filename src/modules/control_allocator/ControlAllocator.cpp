@@ -474,14 +474,14 @@ ControlAllocator::Run()
 				for (int j = 0; j < 4; j++)
 				{
 					actuator_sp(j) = (sqrtf(powf(vertical_actuator_sp(2 * j), 2) + powf(vertical_actuator_sp(2 * j + 1), 2)));
-					// servo_sp(j) = atan2f(vertical_actuator_sp(2 * j), vertical_actuator_sp(2 * j + 1));
-					servo_sp(j) = atan2f(vertical_actuator_sp(2 * j + 1), abs(vertical_actuator_sp(2 * j)));
+					servo_sp(j) = atan2f(vertical_actuator_sp(2 * j +1), 	(vertical_actuator_sp(2 * j)));
+					// servo_sp(j) = atan2f(vertical_actuator_sp(2 * j + 1), (vertical_actuator_sp(2 * j)));
 				}
 
 				// std::cout << "    vertical_actuator_sp_1: " << "  " << vertical_actuator_sp(0) << "  " << vertical_actuator_sp(2) << "  " << vertical_actuator_sp(4) << "  " << vertical_actuator_sp(6) << std::endl;
 				// std::cout << "    vertical_actuator_sp_2: " << "  " << vertical_actuator_sp(1) << "  " << vertical_actuator_sp(3) << "  " << vertical_actuator_sp(5) << "  " << vertical_actuator_sp(7) << std::endl;
 
-
+				// std::cout << "    servo_sp: " << "  " << servo_sp(0) << "  " << servo_sp(1) << "  " << servo_sp(2) << "  " << servo_sp(3) << std::endl;
 
 				if (_thrust_sp(2) > 82)
 				{
@@ -490,9 +490,9 @@ ControlAllocator::Run()
 				}
 				else
 				{
-					actuator_sp /= 14.7;
-					servo_sp /= 3.1415926536;
-					// servo_sp *= 0.0;
+					// actuator_sp /= 14.7;
+					// servo_sp /= 3.1415926536;
+					servo_sp *= 0.0;
 				}
 				_control_allocation[0]->setActuatorSetpoint(actuator_sp);
 
@@ -503,9 +503,8 @@ ControlAllocator::Run()
 
 				_control_allocation[i]->clipActuatorSetpoint();
 
-				// std::cout << "    servo_sp: " << "  " << servo_sp(0) << "  " << servo_sp(1) << "  " << servo_sp(2) << "  " << servo_sp(3) << std::endl;
 
-				std::cout << " actuator_sp: " << "  " << actuator_sp(0) << "  " << actuator_sp(1) << "  " << actuator_sp(2) << "  " << actuator_sp(3) << std::endl;
+				// std::cout << " actuator_sp: " << "  " << actuator_sp(0) << "  " << actuator_sp(1) << "  " << actuator_sp(2) << "  " << actuator_sp(3) << std::endl;
 				// std::cout << std::endl;
 
 
@@ -521,7 +520,7 @@ ControlAllocator::Run()
 									_control_allocation[i]->getActuatorMin(), _control_allocation[i]->getActuatorMax());
 
 				vertical_actuator_sp = _control_allocation[i]->getActuatorSetpoint();
-				std::cout << " actuator_sp: " << "  " << vertical_actuator_sp(0) << "  " << vertical_actuator_sp(1) << "  " << vertical_actuator_sp(2) << "  " << vertical_actuator_sp(3) << std::endl;
+				// std::cout << " actuator_sp: " << "  " << vertical_actuator_sp(0) << "  " << vertical_actuator_sp(1) << "  " << vertical_actuator_sp(2) << "  " << vertical_actuator_sp(3) << std::endl;
 
 
 				if (_has_slew_rate)

@@ -151,6 +151,8 @@ void PositionControl::_positionControlMR(const float dt)
 	Dcmf Rb(att_q);
 
 	ControlMath::setZeroIfNanVector3f(_pos_sp);
+	ControlMath::setZeroIfNanVector3f(_vel_sp);
+
 
 //**=============================================================================================================================================================================== */
 
@@ -167,26 +169,16 @@ void PositionControl::_positionControlMR(const float dt)
 
 //**=============================================================================================================================================================================== */
 
-
-	// Vector3f e_p = _pos - _pos_sp;
-
-	// ControlMath::setZeroIfNanVector3f(e_p);
-	// ControlMath::setZeroIfNanVector3f(_acc_sp);
-
-	// Vector3f r_p = (-e_p.emult(_position_gain) - _vel.emult(_velocity_gain)) + _mass * Vector3f(0.0f, 0.0f, -CONSTANTS_ONE_G);
-	// // Vector3f r_p = (-e_p.emult(_position_gain) - _vel.emult(_velocity_gain));
-
-	// Vector3f r_p_g = r_p;
-	// _thr_sp = Rb.transpose() * r_p_g ;
-
-
-	Vector3f e_p = _pos - _pos_sp;
+	Vector3f e_p = (_pos) - (_pos_sp);
+	Vector3f e_v = _vel - _vel_sp;
 
 	ControlMath::setZeroIfNanVector3f(e_p);
 	ControlMath::setZeroIfNanVector3f(_acc_sp);
 
-	Vector3f r_p = (-e_p.emult(_position_gain) - _vel.emult(_velocity_gain)) + Vector3f(0.0f, 0.0f, -CONSTANTS_ONE_G);
-	_thr_sp = _mass * Rb.transpose() * r_p ;
+	Vector3f r_p = -e_p.emult(_position_gain) - e_v.emult(_velocity_gain) + _mass * Vector3f(0.0f, 0.0f, -CONSTANTS_ONE_G);
+	_thr_sp = Rb.transpose() * r_p ;
+
+	Vector3f velocity = _vel.emult(_velocity_gain);
 
 
 	if (_pos_sp(2) >= 0.0f)
@@ -196,19 +188,17 @@ void PositionControl::_positionControlMR(const float dt)
 
 //**=============================================================================================================================================================================== */
 
-	std::cout << std::endl;
+	// std::cout << std::endl;
 
 	// std::cout << "Rb: "<< Rb.transpose() << std::endl;
 	std::cout << "_thrust_sp_1: " << _thr_sp(0) << "  " << _thr_sp(1) << "  " << _thr_sp(2) << std::endl;
-	// std::cout << "         e_p: " <<   e_p(0) << "  " <<   e_p(1) << "  " <<   e_p(2) << std::endl;
-	// std::cout << "        _pos: " <<   _pos(0) << "  " <<   _pos(1) << "  " <<   _pos(2) << std::endl;
+	std::cout << "     _pos_sp: " <<   _pos_sp(0) << "  " <<   _pos_sp(1) << "  " <<   _pos_sp(2) << std::endl;
+	std::cout << "        _pos: " <<   _pos(0) << "  " <<   _pos(1) << "  " <<   _pos(2) << std::endl;
+	std::cout << "         e_p: " <<       e_p(0) << "  " <<       e_p(1) << "  " <<       e_p(2) << std::endl;
+	std::cout << "         r_p: " <<    r_p(0) << "  " <<    r_p(1) << "  " <<    r_p(2) << std::endl;
+	std::cout << "    velocity: " <<    velocity(0) << "  " <<    velocity(1) << "  " <<    velocity(2) << std::endl;
 
-	// std::cout << "         e_v: " <<       e_v(0) << "  " <<       e_v(1) << "  " <<       e_v(2) << std::endl;
-	std::cout << "        r_p: " <<    r_p(0) << "  " <<    r_p(1) << "  " <<    r_p(2) << std::endl;
-
-
-
-	std::cout << std::endl;
+	// std::cout << std::endl;
 
 }
 // MayurR **//
@@ -217,6 +207,11 @@ void PositionControl::_positionControl()
 {
 	// P-position controller
 	Vector3f vel_sp_position = (_pos_sp - _pos).emult(_gain_pos_p);
+
+	std::cout << "        _pos: " <<_pos(0) << "  " <<_pos(1) << "  " <<_pos(2) << std::endl;
+	std::cout << "     _pos_sp: " <<_pos_sp(0) << "  " <<_pos_sp(1) << "  " <<_pos_sp(2) << std::endl;
+	std::cout << "vel_sp_position: " <<_gain_pos_p(0) << "  " <<_gain_pos_p(1) << "  " <<_gain_pos_p(2) << std::endl;
+	std::cout << std::endl;
 
 
 	// Position and feed-forward velocity setpoints or position states being NAN results in them not having an influence
