@@ -30,13 +30,13 @@ param set-default MC_KAX_GAIN 0.3  # Angular velocity Gain --> Attitude_controll
 param set-default MC_KAY_GAIN 0.3
 param set-default MC_KAZ_GAIN 0.3
 
-param set-default MC_KXX_GAIN 0.0  # Prosition Gain --> Position_controller
-param set-default MC_KXY_GAIN 0.0
-param set-default MC_KXZ_GAIN 1.0    # 10.65   # 1.65
+param set-default MC_KXX_GAIN 0.7  # Prosition Gain --> Position_controller
+param set-default MC_KXY_GAIN 0.7
+param set-default MC_KXZ_GAIN 0.65    # 10.65   # 1.65
 
-param set-default MC_KVX_GAIN 0.0 # Velocity Gain --> Position_controller
-param set-default MC_KVY_GAIN 0.0
-param set-default MC_KVZ_GAIN 0.9    # 1.5
+param set-default MC_KVX_GAIN 1.0 # Velocity Gain --> Position_controller
+param set-default MC_KVY_GAIN 1.0
+param set-default MC_KVZ_GAIN 1.0    # 1.5
 
 param set-default MC_KIX_GAIN 1.6 # Integral Gain --> Position_controller
 param set-default MC_KIY_GAIN 1.6

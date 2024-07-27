@@ -349,13 +349,14 @@ MulticopterAttitudeControl::Run()
 
 				// std::cout << "attitude: " << attitude.roll_body << "  "<<attitude.pitch_body <<"  "<<attitude.yaw_body<<std::endl;
 
-				if (_vehicle_angular_velocity_sub.update(&angular_velocity) && _tilting_drone_x4_attitude_setpoint_sub.update(&x4_attitude_setpoint))
-				{
+				_vehicle_angular_velocity_sub.update(&angular_velocity);
+				 _tilting_drone_x4_attitude_setpoint_sub.update(&x4_attitude_setpoint);
+
 					Vector3f _angular_velocity =  Vector3f(angular_velocity.xyz);
 					Quatf q_input = Quatf(x4_attitude_setpoint.q[0], x4_attitude_setpoint.q[1], x4_attitude_setpoint.q[2], x4_attitude_setpoint.q[3]);
 					// Quatf q_input = Quatf(1.0, 0.0, 0.0, 0.0);
 					rates_sp = _attitude_control.update(dt, q, q_input, _angular_velocity);
-				}
+
 			}
 			else
 			{

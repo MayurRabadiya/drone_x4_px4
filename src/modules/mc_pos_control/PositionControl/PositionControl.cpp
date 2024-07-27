@@ -188,17 +188,16 @@ void PositionControl::_positionControlMR(const float dt)
 
 //**=============================================================================================================================================================================== */
 
-	// std::cout << std::endl;
+// std::cout << "Rb: "<< Rb.transpose() << std::endl;
 
-	// std::cout << "Rb: "<< Rb.transpose() << std::endl;
-	std::cout << "_thrust_sp_1: " << _thr_sp(0) << "  " << _thr_sp(1) << "  " << _thr_sp(2) << std::endl;
+	std::cout << std::endl;
+	std::cout << "_thrust_sp_1: " <<   _thr_sp(0) << "  " <<   _thr_sp(1) << "  " <<   _thr_sp(2) << std::endl;
+	std::cout << "    velocity: " <<  velocity(0) << "  " <<  velocity(1) << "  " <<  velocity(2) << std::endl;
 	std::cout << "     _pos_sp: " <<   _pos_sp(0) << "  " <<   _pos_sp(1) << "  " <<   _pos_sp(2) << std::endl;
-	std::cout << "        _pos: " <<   _pos(0) << "  " <<   _pos(1) << "  " <<   _pos(2) << std::endl;
+	std::cout << "        _pos: " <<      _pos(0) << "  " <<      _pos(1) << "  " <<      _pos(2) << std::endl;
 	std::cout << "         e_p: " <<       e_p(0) << "  " <<       e_p(1) << "  " <<       e_p(2) << std::endl;
-	std::cout << "         r_p: " <<    r_p(0) << "  " <<    r_p(1) << "  " <<    r_p(2) << std::endl;
-	std::cout << "    velocity: " <<    velocity(0) << "  " <<    velocity(1) << "  " <<    velocity(2) << std::endl;
-
-	// std::cout << std::endl;
+	std::cout << "         r_p: " <<       r_p(0) << "  " <<       r_p(1) << "  " <<       r_p(2) << std::endl;
+	std::cout << std::endl;
 
 }
 // MayurR **//

@@ -480,7 +480,6 @@ ControlAllocator::Run()
 
 				// std::cout << "    vertical_actuator_sp_1: " << "  " << vertical_actuator_sp(0) << "  " << vertical_actuator_sp(2) << "  " << vertical_actuator_sp(4) << "  " << vertical_actuator_sp(6) << std::endl;
 				// std::cout << "    vertical_actuator_sp_2: " << "  " << vertical_actuator_sp(1) << "  " << vertical_actuator_sp(3) << "  " << vertical_actuator_sp(5) << "  " << vertical_actuator_sp(7) << std::endl;
-
 				// std::cout << "    servo_sp: " << "  " << servo_sp(0) << "  " << servo_sp(1) << "  " << servo_sp(2) << "  " << servo_sp(3) << std::endl;
 
 				if (_thrust_sp(2) > 82)
@@ -490,7 +489,7 @@ ControlAllocator::Run()
 				}
 				else
 				{
-					// actuator_sp /= 14.7;
+					actuator_sp *= 0.1807;
 					// servo_sp /= 3.1415926536;
 					servo_sp *= 0.0;
 				}
@@ -500,11 +499,10 @@ ControlAllocator::Run()
 				{
 					_control_allocation[i]->applySlewRateLimit(dt);
 				}
-
 				_control_allocation[i]->clipActuatorSetpoint();
 
 
-				// std::cout << " actuator_sp: " << "  " << actuator_sp(0) << "  " << actuator_sp(1) << "  " << actuator_sp(2) << "  " << actuator_sp(3) << std::endl;
+				std::cout << " actuator_sp: " << "  " << actuator_sp(0) << "  " << actuator_sp(1) << "  " << actuator_sp(2) << "  " << actuator_sp(3) << std::endl;
 				// std::cout << std::endl;
 
 
