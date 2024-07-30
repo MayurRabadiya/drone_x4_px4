@@ -186,43 +186,44 @@ ControlAllocationPseudoInverse::allocate()
 	// double beta = 1.0 / (2 * l * l + kf * kf);
 
 	// double values[8][6] = {
-	// 	{-alpha, -alpha, 1.0, -1.0 / l, -1.0 / l, -kf * beta},
-	// 	{-p, -p, 0.0, 0.0, 0.0, -p * l * beta},
-	// 	{-alpha, alpha, 1.0, 1.0 / l, -1.0 / l, kf * beta},
-	// 	{p, -p, 0.0, 0.0, 0.0, -p * l * beta},
-	// 	{alpha, alpha, 1.0, 1.0 / l, 1.0 / l, -kf * beta},
-	// 	{p, p, 0.0, 0.0, 0.0, -p * l * beta},
-	// 	{alpha, -alpha, 1.0, -1.0 / l, 1.0 / l, kf * beta},
-	// 	{-p, p, 0.0, 0.0, 0.0, -p * l * beta}};
+	// 			{-alpha, -alpha,   1.0,  -1.0 / l,    -1.0 / l,    -kf * beta},
+	// 			{-p,     -p,       0.0,   0.0,         0.0,        -p * l * beta},
+	// 			{-alpha,  alpha,   1.0,   1.0 / l,    -1.0 / l,    kf * beta},
+	// 			{p,      -p,       0.0,   0.0,         0.0,        -p * l * beta},
+	// 			{alpha,   alpha,   1.0,   1.0 / l,     1.0 / l,    -kf * beta},
+	// 			{p,       p,       0.0,   0.0,         0.0,        -p * l * beta} ,
+	// 			{alpha,  -alpha,   1.0,  -1.0 / l,     1.0 / l,     kf * beta},
+	// 			{-p,      p,       0.0,   0.0,         0.0,        -p * l * beta}};
 
-	// // Populate _mix matrix
-	// for (int i = 0; i < 8; ++i)
-	// {
-	// 	for (int j = 0; j < 6; ++j)
-	// 	{
-	// 		_mix(i, j) = values[i][j];
-	// 	}
-	// }
-	// _mix *= 0.25;
+	double L = 0.183; // rotor arm length
+	double p = sqrt(2.0)/2;
+	double kf = 8.54858e-06; // force constant
+	double kt = 0.016;
+	double H = kf*kt;
+
+	double values[8][6] = {
+        {1.0 / (4 * p),       -1.0 / (4 * p),       0.0,         0.0,                  0.0,                   L / (4 * (L*L + H*H))},
+        {H / (4 * L * p),     -H / (4 * L * p),     1.0 / 4,    -1.0 / (4 * L * p),    1.0 / (4 * L * p),     H / (4 * (L*L + H*H))},
+        {1.0 / (4 * p),        1.0 / (4 * p),       0.0,         0.0,                  0.0,                   L / (4 * (L*L + H*H))},
+        {-H / (4 * L * p),    -H / (4 * L * p),     1.0 / 4,    -1.0 / (4 * L * p),   -1.0 / (4 * L * p),    -H / (4 * (L*L + H*H))},
+        {-1.0 / (4 * p),       1.0 / (4 * p),       0.0,         0.0,                  0.0,                   L / (4 * (L*L + H*H))},
+        {-H / (4 * L * p),     H / (4 * L * p),     1.0 / 4,     1.0 / (4 * L * p),   -1.0 / (4 * L * p),     H / (4 * (L*L + H*H))},
+        {-1.0 / (4 * p),      -1.0 / (4 * p),       0.0,         0.0,                  0.0,                   L / (4 * (L*L + H*H))},
+        {H / (4 * L * p),      H / (4 * L * p),     1.0 / 4,     1.0 / (4 * L * p),    1.0 / (4 * L * p),    -H / (4 * (L*L + H*H))}};
 
 
 
-	double values[8][6] = {	{ 0.3536,   -0.3536,         0,         0,         0,    0.9615},
-				{ 0.0000,   -0.0000,    0.2500,   -1.3598,    1.3598,    0.0000},
-				{ 0.3536,    0.3536,         0,         0,         0,    0.9615},
-			        {-0.0000,   -0.0000,    0.2500,   -1.3598,   -1.3598,   -0.0000},
-			        {-0.3536,    0.3536,         0,         0,         0,    0.9615},
-			        {-0.0000,    0.0000,    0.2500,    1.3598,   -1.3598,    0.0000},
-			        {-0.3536,   -0.3536,         0,         0,         0,    0.9615},
-				{ 0.0000 ,   0.0000,    0.2500,    1.3598,    1.3598,   -0.0000}};
-
-		for (int i = 0; i < 8; ++i)
+	for (int i = 0; i < 8; ++i)
 	{
 		for (int j = 0; j < 6; ++j)
 		{
 			_mix(i, j) = values[i][j];
 		}
 	}
+	// _mix *= 0.25;
+
+	// std::cout<<"_mix :" << _mix << std::endl;
+
 
 	// Allocate
 	_actuator_sp = _actuator_trim + _mix * (_control_sp - _control_trim);

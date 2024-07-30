@@ -41,8 +41,8 @@ publications:
   - topic: /fmu/out/timesync_status
     type: px4_msgs::msg::TimesyncStatus
 
-  # - topic: /fmu/out/vehicle_angular_velocity
-  #   type: px4_msgs::msg::VehicleAngularVelocity
+  - topic: /fmu/out/vehicle_angular_velocity
+    type: px4_msgs::msg::VehicleAngularVelocity
 
   - topic: /fmu/out/vehicle_land_detected
     type: px4_msgs::msg::VehicleLandDetected
@@ -79,6 +79,13 @@ publications:
 
   - topic: /fmu/out/vehicle_torque_setpoint
     type: px4_msgs::msg::VehicleTorqueSetpoint
+
+  - topic: /fmu/out/actuator_motors
+    type: px4_msgs::msg::ActuatorMotors
+
+  - topic: /fmu/out/actuator_servos
+    type: px4_msgs::msg::ActuatorServos
+
 
 # Create uORB::Publication
 subscriptions:

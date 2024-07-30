@@ -347,16 +347,25 @@ MulticopterAttitudeControl::Run()
 	 			vehicle_angular_velocity_s angular_velocity;
 				tilting_drone_x4_attitude_setpoint_s x4_attitude_setpoint;
 
-				// std::cout << "attitude: " << attitude.roll_body << "  "<<attitude.pitch_body <<"  "<<attitude.yaw_body<<std::endl;
-
-				_vehicle_angular_velocity_sub.update(&angular_velocity);
-				 _tilting_drone_x4_attitude_setpoint_sub.update(&x4_attitude_setpoint);
-
+				if(_vehicle_angular_velocity_sub.update(&angular_velocity) && _tilting_drone_x4_attitude_setpoint_sub.update(&x4_attitude_setpoint))
+				{
 					Vector3f _angular_velocity =  Vector3f(angular_velocity.xyz);
+
 					Quatf q_input = Quatf(x4_attitude_setpoint.q[0], x4_attitude_setpoint.q[1], x4_attitude_setpoint.q[2], x4_attitude_setpoint.q[3]);
 					// Quatf q_input = Quatf(1.0, 0.0, 0.0, 0.0);
 					rates_sp = _attitude_control.update(dt, q, q_input, _angular_velocity);
 
+					vehicle_torque_setpoint_s vehicle_torque_setpoint{};
+					vehicle_torque_setpoint.timestamp_sample = angular_velocity.timestamp_sample;
+					vehicle_torque_setpoint.timestamp = hrt_absolute_time();
+
+					vehicle_torque_setpoint.xyz[0] = rates_sp(0);
+					vehicle_torque_setpoint.xyz[1] = rates_sp(1);
+					vehicle_torque_setpoint.xyz[2] = rates_sp(2);
+
+					_vehicle_torque_setpoint_pub.publish(vehicle_torque_setpoint);
+
+				}
 			}
 			else
 			{

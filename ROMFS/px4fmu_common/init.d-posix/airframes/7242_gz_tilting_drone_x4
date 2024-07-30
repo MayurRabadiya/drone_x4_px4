@@ -22,17 +22,17 @@ param set-default CA_CONTROLLER 1   # 1--> Custom controller,  0-->PX4 controlle
 param set-default MC_PX4_CONTROL 0  # 1--> PX4_SITL with Custom Controller, 0--> PX4_SITL with PX4 controller  -->> controller
  				    #Note: This parameter is to switch the controller between Alexis's or PX4's controller. Only switchable for PX4 not for Drone_X4.
 
-param set-default MC_KRX_GAIN 0.65  # Rotation Gain --> Attitude_controller
-param set-default MC_KRY_GAIN 0.65
-param set-default MC_KRZ_GAIN 0.65
+param set-default MC_KRX_GAIN 0.065  # Rotation Gain --> Attitude_controller
+param set-default MC_KRY_GAIN 0.065
+param set-default MC_KRZ_GAIN 0.065
 
-param set-default MC_KAX_GAIN 0.3  # Angular velocity Gain --> Attitude_controller
-param set-default MC_KAY_GAIN 0.3
-param set-default MC_KAZ_GAIN 0.3
+param set-default MC_KAX_GAIN 0.03  # Angular velocity Gain --> Attitude_controller
+param set-default MC_KAY_GAIN 0.03
+param set-default MC_KAZ_GAIN 0.03
 
-param set-default MC_KXX_GAIN 0.7  # Prosition Gain --> Position_controller
-param set-default MC_KXY_GAIN 0.7
-param set-default MC_KXZ_GAIN 0.65    # 10.65   # 1.65
+param set-default MC_KXX_GAIN 1.0  # Prosition Gain --> Position_controller
+param set-default MC_KXY_GAIN 1.0
+param set-default MC_KXZ_GAIN 1.0    # 10.65   # 1.65
 
 param set-default MC_KVX_GAIN 1.0 # Velocity Gain --> Position_controller
 param set-default MC_KVY_GAIN 1.0
@@ -42,7 +42,7 @@ param set-default MC_KIX_GAIN 1.6 # Integral Gain --> Position_controller
 param set-default MC_KIY_GAIN 1.6
 param set-default MC_KIZ_GAIN 1.6
 
-param set-default MC_MASS 1.5  # UAV Mass
+param set-default MC_MASS 1.8  # UAV Mass
 
 param set-default MC_INERTIA_XX 0.07  # UAV Inertia
 param set-default MC_INERTIA_YY 0.07
