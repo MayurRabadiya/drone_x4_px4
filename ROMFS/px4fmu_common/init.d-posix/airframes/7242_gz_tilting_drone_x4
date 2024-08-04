@@ -21,9 +21,9 @@ param set-default CA_CONTROLLER 1  # 1--> Custom controller,  0-->PX4 controller
 param set-default MC_PX4_CONTROL 0  # 1--> PX4_SITL with Custom Controller, 0--> PX4_SITL with PX4 controller  -->> controller
  				    				# Note: This parameter is to switch the controller between Alexis's or PX4's controller. Only switchable for PX4 not for Drone_X4.
 
-param set-default MC_KRX_GAIN 1.65  # Rotation Gain --> Attitude_controller
-param set-default MC_KRY_GAIN 1.65
-param set-default MC_KRZ_GAIN 1.65
+param set-default MC_KRX_GAIN 0.65  # Rotation Gain --> Attitude_controller
+param set-default MC_KRY_GAIN 0.65
+param set-default MC_KRZ_GAIN 0.65
 
 param set-default MC_KAX_GAIN 0.5  # Angular velocity Gain --> Attitude_controller
 param set-default MC_KAY_GAIN 0.5
