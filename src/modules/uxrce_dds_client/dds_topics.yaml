@@ -32,8 +32,8 @@ publications:
   - topic: /fmu/out/message_format_response
     type: px4_msgs::msg::MessageFormatResponse
 
-  - topic: /fmu/out/position_setpoint_triplet
-    type: px4_msgs::msg::PositionSetpointTriplet
+  # - topic: /fmu/out/position_setpoint_triplet
+  #   type: px4_msgs::msg::PositionSetpointTriplet
 
   - topic: /fmu/out/sensor_combined
     type: px4_msgs::msg::SensorCombined
@@ -71,8 +71,8 @@ publications:
   - topic: /fmu/out/vehicle_status
     type: px4_msgs::msg::VehicleStatus
 
-  - topic: /fmu/out/vehicle_trajectory_waypoint_desired
-    type: px4_msgs::msg::VehicleTrajectoryWaypoint
+  # - topic: /fmu/out/vehicle_trajectory_waypoint_desired
+  #   type: px4_msgs::msg::VehicleTrajectoryWaypoint
 
   - topic: /fmu/out/vehicle_thrust_setpoint
     type: px4_msgs::msg::VehicleThrustSetpoint

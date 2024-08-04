@@ -82,25 +82,35 @@ matrix::Vector3f AttitudeControl::update(const float dt, const Quatf &q_state, c
 	q_sp.normalized();
 	q_state.normalized();
 
-	// Quaternionf q1 = (q_sp).normalized();
-	// Quaternionf q2 = (q_state).inversed().normalized();
-	// Quaternionf q_err = q2 * q1;
-	// q_err.normalize();
+	_R_sp = Dcmf(Quatf(q_sp(0), q_sp(1), -q_sp(2), -q_sp(3)));
+	_R_state = Dcmf(Quatf(q_state(0), q_state(1), -q_state(2), -q_state(3)));
 
-	// Vector3f _w_sp = Vector3f(q_err(1), q_err(2), q_err(3)).emult(_angularVal_gain); // * sign(q_err(0));
-	// _w_sp *= q_err(0) > 0.0f ? 1.0f : -1.0f;
-
-	// Vector3f w_err = _w_sp - angular_velocity;
-	// Vector3f _torque_sp = w_err.emult(_rotation_gain) + angular_velocity.cross(_Ib * angular_velocity);
-
-
-	_R_sp = Dcmf(q_sp);
-	_R_state = Dcmf(q_state);
 	Vector3f e_R = 0.5f * Dcmf(_R_sp.transpose()*_R_state - _R_state.transpose()*_R_sp).vee();
 	Vector3f r_R = -e_R.emult(_rotation_gain) - angular_velocity.emult(_angularVal_gain);
 	Vector3f _torque_sp = _Ib * r_R;
 
-	// std::cout << "_torque_sp: " << _torque_sp(0) << "  "<<_torque_sp(1) <<"  "<<_torque_sp(2)<<std::endl;
+
+	// Vector3f W_sp = Vector3f(0.0f, 0.0f, 0.0f);
+	// SquareMatrix3f R = _R_sp.transpose() * _R_state;
+	// SquareMatrix3f e_r = R - R.transpose();
+	// Vector3f e_R = Vector3f(e_r(2,1), e_r(0,2), e_r(1,0));
+	// Vector3f e_w = angular_velocity -_R_state.transpose() * _R_sp * W_sp;
+
+	// Vector3f _torque_sp = -e_R.emult(_rotation_gain) - e_w.emult(_angularVal_gain);
+
+	// std::cout << "_torque_sp      : " << _torque_sp(0) << "  "<<_torque_sp(1) <<"  "<<_torque_sp(2)<<std::endl;
+	// std::cout << "             e_R: " << e_R(0) << "  "<<e_R(1) <<"  "<<e_R(2)<<std::endl;
+	// std::cout << "angular_velocity: " << angular_velocity(0) << "  "<<angular_velocity(1) <<"  "<<angular_velocity(2)<<std::endl;
+
+	// std::cout << "q_state: " << q_state <<std::endl;
+
+
+
+
+
+	std::cout <<std::endl;
+
+
 
 	return _torque_sp;
 
@@ -110,6 +120,10 @@ matrix::Vector3f AttitudeControl::update(const float dt, const Quatf &q_state, c
 matrix::Vector3f AttitudeControl::update(const Quatf &q) const
 {
 	Quatf qd = _attitude_setpoint_q;
+
+
+	// std::cout << "q_state: " << q_state <<std::endl;
+
 
 	// calculate reduced desired attitude neglecting vehicle's yaw to prioritize roll and pitch
 	const Vector3f e_z = q.dcm_z();

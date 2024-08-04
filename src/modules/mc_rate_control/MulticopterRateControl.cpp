@@ -253,24 +253,17 @@ MulticopterRateControl::Run()
 				}
 			}
 
-			// std::cout << "_rates_setpoint: " << _rates_setpoint(0) << "  "<<_rates_setpoint(1) <<"  "<<_rates_setpoint(2)<<std::endl;
 
-			// ** MayurR */
-			if (_drone_x4 == 1)
-			{
-				vehicle_torque_setpoint.xyz[0] = _rates_setpoint(0);
-				vehicle_torque_setpoint.xyz[1] = _rates_setpoint(1);
-				vehicle_torque_setpoint.xyz[2] = _rates_setpoint(2);
-			}
-
-			// ** MayurR */
 			vehicle_thrust_setpoint.timestamp_sample = angular_velocity.timestamp_sample;
 			vehicle_thrust_setpoint.timestamp = hrt_absolute_time();
 			_vehicle_thrust_setpoint_pub.publish(vehicle_thrust_setpoint);
 
 			vehicle_torque_setpoint.timestamp_sample = angular_velocity.timestamp_sample;
 			vehicle_torque_setpoint.timestamp = hrt_absolute_time();
-			// _vehicle_torque_setpoint_pub.publish(vehicle_torque_setpoint);
+
+			// ** MayurR */
+			if (_drone_x4 != 1)	{_vehicle_torque_setpoint_pub.publish(vehicle_torque_setpoint);	}
+			// ** MayurR */
 
 			updateActuatorControlsStatus(vehicle_torque_setpoint, dt);
 

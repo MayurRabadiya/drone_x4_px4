@@ -186,32 +186,30 @@ ControlAllocationPseudoInverse::allocate()
 	// double beta = 1.0 / (2 * l * l + kf * kf);
 
 	// double values[8][6] = {
-	// 			{-alpha, -alpha,   1.0,  -1.0 / l,    -1.0 / l,    -kf * beta},
 	// 			{-p,     -p,       0.0,   0.0,         0.0,        -p * l * beta},
-	// 			{-alpha,  alpha,   1.0,   1.0 / l,    -1.0 / l,    kf * beta},
+	// 			{-alpha, -alpha,   1.0,  -1.0 / l,    -1.0 / l,    -kf * beta},
 	// 			{p,      -p,       0.0,   0.0,         0.0,        -p * l * beta},
-	// 			{alpha,   alpha,   1.0,   1.0 / l,     1.0 / l,    -kf * beta},
+	// 			{-alpha,  alpha,   1.0,   1.0 / l,    -1.0 / l,    kf * beta},
 	// 			{p,       p,       0.0,   0.0,         0.0,        -p * l * beta} ,
-	// 			{alpha,  -alpha,   1.0,  -1.0 / l,     1.0 / l,     kf * beta},
-	// 			{-p,      p,       0.0,   0.0,         0.0,        -p * l * beta}};
+	// 			{alpha,   alpha,   1.0,   1.0 / l,     1.0 / l,    -kf * beta},
+	// 			{-p,      p,       0.0,   0.0,         0.0,        -p * l * beta},
+	// 			{alpha,  -alpha,   1.0,  -1.0 / l,     1.0 / l,     kf * beta}};
 
-	double L = 0.183; // rotor arm length
-	double p = sqrt(2.0)/2;
-	double kf = 8.54858e-06; // force constant
-	double kt = 0.016;
-	double H = kf*kt;
+	float L = 0.183f; // rotor arm length
+	float p = sqrt(2.0f)/2;
+	float kf = 8.54858e-06f; // force constant
+	float kt = 0.016f;
+	float H = kf*kt;
 
-	double values[8][6] = {
-        {1.0 / (4 * p),       -1.0 / (4 * p),       0.0,         0.0,                  0.0,                   L / (4 * (L*L + H*H))},
-        {H / (4 * L * p),     -H / (4 * L * p),     1.0 / 4,    -1.0 / (4 * L * p),    1.0 / (4 * L * p),     H / (4 * (L*L + H*H))},
-        {1.0 / (4 * p),        1.0 / (4 * p),       0.0,         0.0,                  0.0,                   L / (4 * (L*L + H*H))},
-        {-H / (4 * L * p),    -H / (4 * L * p),     1.0 / 4,    -1.0 / (4 * L * p),   -1.0 / (4 * L * p),    -H / (4 * (L*L + H*H))},
-        {-1.0 / (4 * p),       1.0 / (4 * p),       0.0,         0.0,                  0.0,                   L / (4 * (L*L + H*H))},
-        {-H / (4 * L * p),     H / (4 * L * p),     1.0 / 4,     1.0 / (4 * L * p),   -1.0 / (4 * L * p),     H / (4 * (L*L + H*H))},
-        {-1.0 / (4 * p),      -1.0 / (4 * p),       0.0,         0.0,                  0.0,                   L / (4 * (L*L + H*H))},
-        {H / (4 * L * p),      H / (4 * L * p),     1.0 / 4,     1.0 / (4 * L * p),    1.0 / (4 * L * p),    -H / (4 * (L*L + H*H))}};
-
-
+	float values[8][6] = {
+        {-1.0f / (4 * p),       -1.0f / (4 * p),       0.0f,         0.0f,                  0.0f,                  -L / (4 * (L*L + H*H))},
+        {-H / (4 * L * p),      -H / (4 * L * p),      1.0f / 4,    -1.0f / (4 * L * p),   -1.0f / (4 * L * p),    -H / (4 * (L*L + H*H))},
+        { 1.0f / (4 * p),       -1.0f / (4 * p),       0.0f,         0.0f,                  0.0f,                  -L / (4 * (L*L + H*H))},
+        {-H / (4 * L * p),       H / (4 * L * p),      1.0f / 4,     1.0f / (4 * L * p),   -1.0f / (4 * L * p),     H / (4 * (L*L + H*H))},
+        { 1.0f / (4 * p),        1.0f / (4 * p),       0.0f,         0.0f,                  0.0f,                  -L / (4 * (L*L + H*H))},
+        { H / (4 * L * p),       H / (4 * L * p),      1.0f / 4,     1.0f / (4 * L * p),    1.0f / (4 * L * p),    -H / (4 * (L*L + H*H))},
+        {-1.0f / (4 * p),        1.0f / (4 * p),       0.0f,         0.0f,                  0.0f,                  -L / (4 * (L*L + H*H))},
+        { H / (4 * L * p),      -H / (4 * L * p),      1.0f / 4,    -1.0f / (4 * L * p),    1.0f / (4 * L * p),     H / (4 * (L*L + H*H))}};
 
 	for (int i = 0; i < 8; ++i)
 	{

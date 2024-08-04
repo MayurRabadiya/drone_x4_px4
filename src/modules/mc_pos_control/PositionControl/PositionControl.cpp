@@ -147,8 +147,7 @@ void PositionControl::_positionControlMR(const float dt)
 	vehicle_attitude_s att;
 	_attitude_sub.update(&att);
 
-	Quaternionf att_q(att.q[0], att.q[1], att.q[2], att.q[3]);
-	Dcmf Rb(att_q);
+	Dcmf Rb(Quatf(att.q[0], att.q[1], -att.q[2], -att.q[3]));
 
 	ControlMath::setZeroIfNanVector3f(_pos_sp);
 	ControlMath::setZeroIfNanVector3f(_vel_sp);
@@ -178,20 +177,20 @@ void PositionControl::_positionControlMR(const float dt)
 	Vector3f r_p = e_p.emult(_position_gain) + e_v.emult(_velocity_gain) + _mass * Vector3f(0.0f, 0.0f, CONSTANTS_ONE_G);
 	_thr_sp = Rb.transpose() * r_p ;
 
-	// Vector3f velocity = _vel.emult(_velocity_gain);
-
 //**=============================================================================================================================================================================== */
 
-// std::cout << "Rb: "<< Rb.transpose() << std::endl;
+	// std::cout << "Rb_TT: "<< Rb.transpose() << std::endl;
+	std::cout << "Rb: "<< Rb<< std::endl;
 
-	// std::cout << std::endl;
-	// std::cout << "_thrust_sp_1: " <<   _thr_sp(0) << "  " <<   _thr_sp(1) << "  " <<   _thr_sp(2) << std::endl;
+	std::cout << std::endl;
+	std::cout << "_thrust_sp_1: " <<   _thr_sp(0) << "  " <<   _thr_sp(1) << "  " <<   _thr_sp(2) << std::endl;
 	// std::cout << "    velocity: " <<  velocity(0) << "  " <<  velocity(1) << "  " <<  velocity(2) << std::endl;
-	// std::cout << "     _pos_sp: " <<   _pos_sp(0) << "  " <<   _pos_sp(1) << "  " <<   _pos_sp(2) << std::endl;
-	// std::cout << "        _pos: " <<      _pos(0) << "  " <<      _pos(1) << "  " <<      _pos(2) << std::endl;
-	// std::cout << "         e_p: " <<       e_p(0) << "  " <<       e_p(1) << "  " <<       e_p(2) << std::endl;
-	// std::cout << "         r_p: " <<       r_p(0) << "  " <<       r_p(1) << "  " <<       r_p(2) << std::endl;
-	// std::cout << std::endl;
+	std::cout << "     _pos_sp: " <<   _pos_sp(0) << "  " <<   _pos_sp(1) << "  " <<   _pos_sp(2) << std::endl;
+	std::cout << "        _pos: " <<      _pos(0) << "  " <<      _pos(1) << "  " <<      _pos(2) << std::endl;
+	std::cout << "         e_p: " <<       e_p(0) << "  " <<       e_p(1) << "  " <<       e_p(2) << std::endl;
+	std::cout << "         r_p: " <<       r_p(0) << "  " <<       r_p(1) << "  " <<       r_p(2) << std::endl;
+
+	std::cout << std::endl;
 
 }
 // MayurR **//
@@ -366,3 +365,54 @@ void PositionControl::getAttitudeSetpoint(vehicle_attitude_setpoint_s &attitude_
 	ControlMath::thrustToAttitude(_thr_sp, _yaw_sp, attitude_setpoint);
 	attitude_setpoint.yaw_sp_move_rate = _yawspeed_sp;
 }
+
+
+
+
+
+	// Matrix<float, 8U, 6U> _mix;
+
+	// float L = 0.183f; // rotor arm length
+	// float p = sqrt(2.0f)/2;
+	// float kf = 8.54858e-06f; // force constant
+	// float kt = 0.016f;
+	// float H = kf*kt;
+
+	// float values[8][6] = {
+    //     { 1.0f / (4 * p),       -1.0f / (4 * p),       0.0f,         0.0f,                  0.0f,                   L / (4 * (L*L + H*H))},
+    //     { H / (4 * L * p),     -H / (4 * L * p),     1.0f / 4,    -1.0f / (4 * L * p),    1.0f / (4 * L * p),     H / (4 * (L*L + H*H))},
+    //     { 1.0f / (4 * p),        1.0f / (4 * p),       0.0f,         0.0f,                  0.0f,                   L / (4 * (L*L + H*H))},
+    //     {-H / (4 * L * p),    -H / (4 * L * p),     1.0f / 4,    -1.0f / (4 * L * p),   -1.0f / (4 * L * p),    -H / (4 * (L*L + H*H))},
+    //     {-1.0f / (4 * p),       1.0f / (4 * p),       0.0f,         0.0f,                  0.0f,                   L / (4 * (L*L + H*H))},
+    //     {-H / (4 * L * p),     H / (4 * L * p),     1.0f / 4,     1.0f / (4 * L * p),   -1.0f / (4 * L * p),     H / (4 * (L*L + H*H))},
+    //     {-1.0f / (4 * p),      -1.0f / (4 * p),       0.0f,         0.0f,                  0.0f,                   L / (4 * (L*L + H*H))},
+    //     { H / (4 * L * p),      H / (4 * L * p),     1.0f / 4,     1.0f / (4 * L * p),    1.0f / (4 * L * p),    -H / (4 * (L*L + H*H))}};
+
+	// for (int i = 0; i < 8; ++i)
+	// {
+	// 	for (int j = 0; j < 6; ++j)
+	// 	{
+	// 		_mix(i, j) = values[i][j];
+	// 	}
+	// }
+
+	// Vector<float, 8U> act;
+	// Vector<float,6U> u;
+	// u(0) = t(0);
+	// u(1) = t(1);
+	// u(2) = t(2);
+	// u(3) = -4.20465e-05f;
+	// u(4) = -0.00259095f;
+	// u(5) = 6.7724e-05f;
+
+	// act = _mix * u;
+
+	// matrix::Vector<float, 4> actuator_sp;
+	// matrix::Vector<float, 4> servo_sp;
+
+
+	// for (int j = 0; j < 4; j++)
+	// {
+	// 	actuator_sp(j) = (sqrtf(powf(act(2 * j), 2) + powf(act(2 * j + 1), 2)));
+	// 	servo_sp(j) = atan2f(act(2 * j), act(2 * j +1));
+	// }

@@ -352,7 +352,10 @@ MulticopterAttitudeControl::Run()
 					Vector3f _angular_velocity =  Vector3f(angular_velocity.xyz);
 
 					Quatf q_input = Quatf(x4_attitude_setpoint.q[0], x4_attitude_setpoint.q[1], x4_attitude_setpoint.q[2], x4_attitude_setpoint.q[3]);
-					// Quatf q_input = Quatf(1.0, 0.0, 0.0, 0.0);
+					std::cout << "q_input: " << q_input<<std::endl;
+
+					// Quatf q_input = Quatf(0.7071068, 0, 0.7071068, 0);
+
 					rates_sp = _attitude_control.update(dt, q, q_input, _angular_velocity);
 
 					vehicle_torque_setpoint_s vehicle_torque_setpoint{};

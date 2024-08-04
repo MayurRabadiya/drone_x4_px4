@@ -215,17 +215,12 @@ int ActuatorEffectivenessRotors::computeEffectivenessMatrix(const Geometry &geom
 		{
 			//** MayurR */
 			// float l = 1.0f;       // rotor arm length
-			float l = 0.186f;       // rotor arm length
-			float p = 0.707106781f;
+			float l = 0.183f;       // rotor arm length
+			float p = sqrt(2.0f)/2;
 
-			float kt = 4.9715e-05; // drage constant
-			float kf =  0.00305;   // force constant
-
-			// float kt = 0.016f; // drage constant
-			// float kf =  8.54858e-06f;   // force constant
-
-			float del = kt / kf;
-			// float del = 1.1765e-038;
+			float kt = 0.016f;          // drage constant
+			float kf =  8.54858e-06f;   // force constant
+			float del = kt * kf;
 
 			effectiveness(0, 0) = p;
 			effectiveness(1, 0) = -p;
@@ -256,17 +251,17 @@ int ActuatorEffectivenessRotors::computeEffectivenessMatrix(const Geometry &geom
 			effectiveness(5, 3) = -del;
 
 			effectiveness(0, 4) = -p;
-			effectiveness(1, 4) = -p;
-			effectiveness(2, 4) = 0;
+			effectiveness(1, 4) =  p;
+			effectiveness(2, 4) =  0;
 			effectiveness(3, 4) = -p*del;
-			effectiveness(4, 4) = p*del;
-			effectiveness(5, 4) = l;
+			effectiveness(4, 4) =  p*del;
+			effectiveness(5, 4) =  l;
 
 			effectiveness(0, 5) = 0;
 			effectiveness(1, 5) = 0;
 			effectiveness(2, 5) = 1;
 			effectiveness(3, 5) = -p*l;
-			effectiveness(4, 5) = p*l;
+			effectiveness(4, 5) =  p*l;
 			effectiveness(5, 5) = -del;
 
 			effectiveness(0, 6) = -p;
@@ -282,73 +277,6 @@ int ActuatorEffectivenessRotors::computeEffectivenessMatrix(const Geometry &geom
 			effectiveness(3, 7) = p*l;
 			effectiveness(4, 7) = -p*l;
 			effectiveness(5, 7) = del;
-
-			// float p2 = 1.0f/2;
-			// float p1 = sqrt(3)/2;
-			// float p1 = p;
-			// float p2 = p;
-
-			// float m = 0.4;
-			// float n = 0.01;
-
-
-
-			// effectiveness(0, 0) = 0;
-			// effectiveness(1, 0) = 0;
-			// effectiveness(2, 0) = -m;
-			// effectiveness(3, 0) = p1*l*m;
-			// effectiveness(4, 0) = p2*l*m;
-			// effectiveness(5, 0) = -n;
-
-			// effectiveness(0, 1) = p1*m;
-			// effectiveness(1, 1) = p2*m;
-			// effectiveness(2, 1) = 0;
-			// effectiveness(3, 1) = p1*n;
-			// effectiveness(4, 1) = p2*n;
-			// effectiveness(5, 1) = l*m;
-
-			// effectiveness(0, 2) = 0;
-			// effectiveness(1, 2) = 0;
-			// effectiveness(2, 2) = -m;
-			// effectiveness(3, 2) = -p1*l*m;
-			// effectiveness(4, 2) = -p2*l*m;
-			// effectiveness(5, 2) = n;
-
-			// effectiveness(0, 3) = -p1*m;
-			// effectiveness(1, 3) = -p2*m;
-			// effectiveness(2, 3) = 0;
-			// effectiveness(3, 3) = p1*n;
-			// effectiveness(4, 3) = p2*n;
-			// effectiveness(5, 3) = l*m;
-
-			// effectiveness(0, 4) = 0;
-			// effectiveness(1, 4) = 0;
-			// effectiveness(2, 4) = -m;
-			// effectiveness(3, 4) = -p1*l*m;
-			// effectiveness(4, 4) = p2*l*m;
-			// effectiveness(5, 4) = n;
-
-			// effectiveness(0, 5) = -p1*m;
-			// effectiveness(1, 5) = p2*m;
-			// effectiveness(2, 5) = 0;
-			// effectiveness(3, 5) = p1*n;
-			// effectiveness(4, 5) = -p2*n;
-			// effectiveness(5, 5) = l*m;
-
-			// effectiveness(0, 6) = 0;
-			// effectiveness(1, 6) = 0;
-			// effectiveness(2, 6) = -m;
-			// effectiveness(3, 6) = p1*m*l;
-			// effectiveness(4, 6) = -p2*m*l;
-			// effectiveness(5, 6) = -n;
-
-			// effectiveness(0, 7) = p1*m;
-			// effectiveness(1, 7) = -p2*m;
-			// effectiveness(2, 7) = 0;
-			// effectiveness(3, 7) = p1*n;
-			// effectiveness(4, 7) = -p2*n;
-			// effectiveness(5, 7) = l*m;
-			// std::cout << "effectiveness: " << effectiveness << std::endl;
 		}
 		//** MayurR */
 
