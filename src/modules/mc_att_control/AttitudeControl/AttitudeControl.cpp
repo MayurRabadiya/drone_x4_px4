@@ -82,8 +82,13 @@ matrix::Vector3f AttitudeControl::update(const float dt, const Quatf &q_state, c
 	q_sp.normalized();
 	q_state.normalized();
 
-	_R_sp = Dcmf(Quatf(q_sp(0), q_sp(1), -q_sp(2), -q_sp(3)));
-	_R_state = Dcmf(Quatf(q_state(0), q_state(1), -q_state(2), -q_state(3)));
+	// Quatf uav_base_q(0.0f, 1.0f, 0.0f, 0.0f);
+	// Quatf ned_enu_q(0.0f, 0.707107f, 0.707107f, 0.0f);
+	Quatf q_state_(q_state(0), q_state(1), q_state(2), q_state(3));
+	// Quatf q = (ned_enu_q * q_state) * uav_base_q;
+
+	_R_sp = Dcmf(Quatf(q_sp(0), q_sp(1), q_sp(2), q_sp(3)));
+	_R_state = Dcmf(Quatf(q_state_(0), q_state_(1), q_state_(2), q_state_(3)));
 
 	Vector3f e_R = 0.5f * Dcmf(_R_sp.transpose()*_R_state - _R_state.transpose()*_R_sp).vee();
 	Vector3f r_R = -e_R.emult(_rotation_gain) - angular_velocity.emult(_angularVal_gain);
@@ -108,7 +113,7 @@ matrix::Vector3f AttitudeControl::update(const float dt, const Quatf &q_state, c
 
 
 
-	std::cout <<std::endl;
+	// std::cout <<std::endl;
 
 
 

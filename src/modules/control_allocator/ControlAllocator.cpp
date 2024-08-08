@@ -477,9 +477,8 @@ ControlAllocator::Run()
 
 				for (int j = 0; j < 4; j++)
 				{
-					actuator_sp(j) = (sqrtf(powf(vertical_actuator_sp(2 * j), 2) + powf(vertical_actuator_sp(2 * j + 1), 2)));
-					//    servo_sp(j) = atan2f(vertical_actuator_sp(2 * j +1), vertical_actuator_sp(2 * j));
-					servo_sp(j) = atan2f(vertical_actuator_sp(2 * j), vertical_actuator_sp(2 * j +1));
+					actuator_sp(j) = (sqrtf(powf(vertical_actuator_sp(2*j), 2) + powf(vertical_actuator_sp(2*j+1), 2)));
+					servo_sp(j) = atan2f(vertical_actuator_sp(2*j+1), vertical_actuator_sp(2*j));
 				}
 
 				actuator_sp *= 0.15170242;
@@ -521,7 +520,7 @@ ControlAllocator::Run()
 									_control_allocation[i]->getActuatorMin(), _control_allocation[i]->getActuatorMax());
 
 				vertical_actuator_sp = _control_allocation[i]->getActuatorSetpoint();
-				std::cout << " actuator_sp: " << "  " << vertical_actuator_sp(0) << "  " << vertical_actuator_sp(1) << "  " << vertical_actuator_sp(2) << "  " << vertical_actuator_sp(3) << std::endl;
+				// std::cout << " actuator_sp: " << "  " << vertical_actuator_sp(0) << "  " << vertical_actuator_sp(1) << "  " << vertical_actuator_sp(2) << "  " << vertical_actuator_sp(3) << std::endl;
 
 				if (_has_slew_rate)
 				{
@@ -779,7 +778,7 @@ ControlAllocator::publish_actuator_controls()
 		actuator_motors.control[i] = NAN;
 	}
 
-	// std::cout << "actuator_motors:  " << actuator_motors.control[0] << "  " << actuator_motors.control[1] << "  " << actuator_motors.control[2] << "  " << actuator_motors.control[3] <<std::endl;
+		// std::cout << "actuator_motors:  " << actuator_motors.control[0] << "  " << actuator_motors.control[1] << "  " << actuator_motors.control[2] << "  " << actuator_motors.control[3] <<std::endl;
 	_actuator_motors_pub.publish(actuator_motors);
 
 	//** MayurR */

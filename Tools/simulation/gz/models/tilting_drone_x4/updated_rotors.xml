@@ -512,7 +512,7 @@
 
 
     <!-- ====================== TOP_LEFT PROPELLER ===================== -->
-    <link name="rotor_2">
+    <link name="rotor_1">
       <gravity>true</gravity>
       <self_collide>false</self_collide>
       <velocity_decay />
@@ -526,7 +526,7 @@
           <izz>2.649858234714004e-05</izz>
         </inertia>
       </inertial>
-      <visual name="rotor_2_visual">
+      <visual name="rotor_1_visual">
         <geometry>
           <mesh>
             <scale>0.00099552072 0.00099552072 0.00099552072</scale>
@@ -541,7 +541,7 @@
         </material>
       </visual>
 
-      <collision name="rotor_2_collision">
+      <collision name="rotor_1_collision">
         <pose>0 0 0.005 0 0 0 </pose>
         <geometry>
           <cylinder>
@@ -563,9 +563,9 @@
       </collision>
     </link>
 
-    <joint name="rotor_2_joint" type="revolute">
+    <joint name="rotor_1_joint" type="revolute">
       <parent>arm_tl_link</parent>
-      <child>rotor_2</child>
+      <child>rotor_1</child>
       <axis>
         <xyz>0 0 1</xyz>
         <limit>
@@ -583,7 +583,7 @@
 
 
     <!-- ====================== BOTTOM_RIGHT PROPELLER ===================== -->
-    <link name="rotor_0">
+    <link name="rotor_3">
       <gravity>true</gravity>
       <self_collide>false</self_collide>
       <velocity_decay />
@@ -597,7 +597,7 @@
           <izz>2.649858234714004e-05</izz>
         </inertia>
       </inertial>
-      <visual name="rotor_0_visual">
+      <visual name="rotor_3_visual">
         <geometry>
           <mesh>
             <scale>0.00099552072 0.00099552072 0.00099552072</scale>
@@ -607,76 +607,6 @@
         <material>
           <script>
             <name>Gazebo/DarkGray</name>
-            <uri>file://media/materials/scripts/gazebo.material</uri>
-          </script>
-        </material>
-      </visual>
-      <collision name="rotor_0_collision">
-        <pose>0 0 0.005 0 0 0 </pose>
-        <geometry>
-          <cylinder>
-            <length>0.005</length>
-            <radius>0.0889</radius>
-          </cylinder>
-        </geometry>
-        <surface>
-          <contact>
-            <ode>
-              <min_depth>0.001</min_depth>
-              <max_vel>0</max_vel>
-            </ode>
-          </contact>
-          <friction>
-            <ode />
-          </friction>
-        </surface>
-      </collision>
-    </link>
-
-    <joint name="rotor_0_joint" type="revolute">
-      <parent>arm_br_link</parent>
-      <child>rotor_0</child>
-      <axis>
-        <xyz>0 0 1</xyz>
-        <limit>
-          <lower>-1e+16</lower>
-          <upper>1e+16</upper>
-        </limit>
-        <dynamics>
-          <spring_reference>0</spring_reference>
-          <spring_stiffness>0</spring_stiffness>
-        </dynamics>
-      </axis>
-    </joint>
-
-    <!-- =============================================================== -->
-
-
-    <!-- ====================== TOP_RIGHT PROPELLER ===================== -->
-    <link name="rotor_3">
-      <gravity>true</gravity>
-      <self_collide>false</self_collide>
-      <velocity_decay />
-      <pose relative_to="arm_tr_link"> 0 -0.10901593 0.0295944 0 0 0 </pose>
-      <inertial>
-        <pose>0 0 0 0 0 0</pose>
-        <mass>0.009</mass>
-        <inertia>
-          <ixx>3.8464910483993325e-07</ixx>
-          <iyy>2.6115851691700804e-05</iyy>
-          <izz>2.649858234714004e-05</izz>
-        </inertia>
-      </inertial>
-      <visual name="rotor_3_visual">
-        <geometry>
-          <mesh>
-            <scale>0.00099552072 0.00099552072 0.00099552072</scale>
-            <uri>model://tilting_drone_x4/meshes/prop_ccw.stl</uri>
-          </mesh>
-        </geometry>
-        <material>
-          <script>
-            <name>Gazebo/Gray</name>
             <uri>file://media/materials/scripts/gazebo.material</uri>
           </script>
         </material>
@@ -704,7 +634,7 @@
     </link>
 
     <joint name="rotor_3_joint" type="revolute">
-      <parent>arm_tr_link</parent>
+      <parent>arm_br_link</parent>
       <child>rotor_3</child>
       <axis>
         <xyz>0 0 1</xyz>
@@ -722,12 +652,12 @@
     <!-- =============================================================== -->
 
 
-    <!-- ====================== BOTTOM_LEFT PROPELLER ===================== -->
-    <link name="rotor_1">
+    <!-- ====================== TOP_RIGHT PROPELLER ===================== -->
+    <link name="rotor_0">
       <gravity>true</gravity>
       <self_collide>false</self_collide>
       <velocity_decay />
-      <pose relative_to="arm_bl_link"> 0 -0.10901593 0.0295944 0 0 0 </pose>
+      <pose relative_to="arm_tr_link"> 0 -0.10901593 0.0295944 0 0 0 </pose>
       <inertial>
         <pose>0 0 0 0 0 0</pose>
         <mass>0.009</mass>
@@ -737,7 +667,7 @@
           <izz>2.649858234714004e-05</izz>
         </inertia>
       </inertial>
-      <visual name="rotor_1_visual">
+      <visual name="rotor_0_visual">
         <geometry>
           <mesh>
             <scale>0.00099552072 0.00099552072 0.00099552072</scale>
@@ -751,7 +681,7 @@
           </script>
         </material>
       </visual>
-      <collision name="rotor_1_collision">
+      <collision name="rotor_0_collision">
         <pose>0 0 0.005 0 0 0 </pose>
         <geometry>
           <cylinder>
@@ -773,9 +703,79 @@
       </collision>
     </link>
 
-    <joint name="rotor_1_joint" type="revolute">
+    <joint name="rotor_0_joint" type="revolute">
+      <parent>arm_tr_link</parent>
+      <child>rotor_0</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+
+    <!-- =============================================================== -->
+
+
+    <!-- ====================== BOTTOM_LEFT PROPELLER ===================== -->
+    <link name="rotor_2">
+      <gravity>true</gravity>
+      <self_collide>false</self_collide>
+      <velocity_decay />
+      <pose relative_to="arm_bl_link"> 0 -0.10901593 0.0295944 0 0 0 </pose>
+      <inertial>
+        <pose>0 0 0 0 0 0</pose>
+        <mass>0.009</mass>
+        <inertia>
+          <ixx>3.8464910483993325e-07</ixx>
+          <iyy>2.6115851691700804e-05</iyy>
+          <izz>2.649858234714004e-05</izz>
+        </inertia>
+      </inertial>
+      <visual name="rotor_2_visual">
+        <geometry>
+          <mesh>
+            <scale>0.00099552072 0.00099552072 0.00099552072</scale>
+            <uri>model://tilting_drone_x4/meshes/prop_ccw.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <name>Gazebo/Gray</name>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+          </script>
+        </material>
+      </visual>
+      <collision name="rotor_2_collision">
+        <pose>0 0 0.005 0 0 0 </pose>
+        <geometry>
+          <cylinder>
+            <length>0.005</length>
+            <radius>0.0889</radius>
+          </cylinder>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <min_depth>0.001</min_depth>
+              <max_vel>0</max_vel>
+            </ode>
+          </contact>
+          <friction>
+            <ode />
+          </friction>
+        </surface>
+      </collision>
+    </link>
+
+    <joint name="rotor_2_joint" type="revolute">
       <parent>arm_bl_link</parent>
-      <child>rotor_1</child>
+      <child>rotor_2</child>
       <axis>
         <xyz>0 0 1</xyz>
         <limit>
@@ -797,7 +797,7 @@
       filename="gz-sim-joint-position-controller-system"
       name="gz::sim::systems::JointPositionController">
       <joint_name>arm_tl_joint</joint_name>
-      <sub_topic>servo_2</sub_topic>
+      <sub_topic>servo_1</sub_topic>
       <p_gain>10</p_gain>
       <i_gain>0.1</i_gain>
       <d_gain>0.01</d_gain>
@@ -811,20 +811,6 @@
       filename="gz-sim-joint-position-controller-system"
       name="gz::sim::systems::JointPositionController">
       <joint_name>arm_tr_joint</joint_name>
-      <sub_topic>servo_3</sub_topic>
-      <p_gain>10</p_gain>
-      <i_gain>0.1</i_gain>
-      <d_gain>0.01</d_gain>
-      <i_max>1</i_max>
-      <i_min>-1</i_min>
-      <cmd_max>1000</cmd_max>
-      <cmd_min>-1000</cmd_min>
-    </plugin>
-
-    <plugin
-      filename="gz-sim-joint-position-controller-system"
-      name="gz::sim::systems::JointPositionController">
-      <joint_name>arm_br_joint</joint_name>
       <sub_topic>servo_0</sub_topic>
       <p_gain>10</p_gain>
       <i_gain>0.1</i_gain>
@@ -838,8 +824,22 @@
     <plugin
       filename="gz-sim-joint-position-controller-system"
       name="gz::sim::systems::JointPositionController">
+      <joint_name>arm_br_joint</joint_name>
+      <sub_topic>servo_3</sub_topic>
+      <p_gain>10</p_gain>
+      <i_gain>0.1</i_gain>
+      <d_gain>0.01</d_gain>
+      <i_max>1</i_max>
+      <i_min>-1</i_min>
+      <cmd_max>1000</cmd_max>
+      <cmd_min>-1000</cmd_min>
+    </plugin>
+
+    <plugin
+      filename="gz-sim-joint-position-controller-system"
+      name="gz::sim::systems::JointPositionController">
       <joint_name>arm_bl_joint</joint_name>
-      <sub_topic>servo_1</sub_topic>
+      <sub_topic>servo_2</sub_topic>
       <p_gain>10</p_gain>
       <i_gain>0.1</i_gain>
       <d_gain>0.01</d_gain>
