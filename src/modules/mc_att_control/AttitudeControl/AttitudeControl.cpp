@@ -82,10 +82,8 @@ matrix::Vector3f AttitudeControl::update(const float dt, const Quatf &q_state, c
 	q_sp.normalized();
 	q_state.normalized();
 
-	Quatf q_state_(q_state(0), q_state(1), q_state(2), q_state(3));
-
 	_R_sp = Dcmf(Quatf(q_sp(0), q_sp(1), q_sp(2), q_sp(3)));
-	_R_state = Dcmf(Quatf(q_state_(0), q_state_(1), q_state_(2), q_state_(3)));
+	_R_state = Dcmf(Quatf(q_state(0), q_state(1), q_state(2), q_state(3)));
 
 	Vector3f e_R = 0.5f * Dcmf(_R_sp.transpose()*_R_state - _R_state.transpose()*_R_sp).vee();
 	Vector3f r_R = -e_R.emult(_rotation_gain) - angular_velocity.emult(_angularVal_gain);
@@ -93,10 +91,11 @@ matrix::Vector3f AttitudeControl::update(const float dt, const Quatf &q_state, c
 
 
 	// std::cout << "_torque_sp      : " << _torque_sp(0) << "  "<<_torque_sp(1) <<"  "<<_torque_sp(2)<<std::endl;
-	// std::cout << "             e_R: " << e_R(0) << "  "<<e_R(1) <<"  "<<e_R(2)<<std::endl;
-	// std::cout << "angular_velocity: " << angular_velocity(0) << "  "<<angular_velocity(1) <<"  "<<angular_velocity(2)<<std::endl;
+	// std::cout << "     e_R: " << e_R(0) << "  "<<e_R(1) <<"  "<<e_R(2)<<std::endl;
+	// std::cout << " q_state: " << q_state(0) << "  "<<q_state(1) <<"  "<<q_state(2)<<"  "<<q_state(3)<<std::endl;
 
-	// std::cout << "q_state: " << q_state <<std::endl;
+	// // std::cout << "angular_velocity: " << angular_velocity(0) << "  "<<angular_velocity(1) <<"  "<<angular_velocity(2)<<std::endl;
+
 	// std::cout <<std::endl;
 	return _torque_sp;
 

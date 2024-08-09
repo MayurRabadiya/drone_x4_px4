@@ -21,21 +21,21 @@ param set-default CA_CONTROLLER 1  # 1--> Custom controller,  0-->PX4 controller
 param set-default MC_PX4_CONTROL 0  # 1--> PX4_SITL with Custom Controller, 0--> PX4_SITL with PX4 controller  -->> controller
  				    				# Note: This parameter is to switch the controller between Alexis's or PX4's controller. Only switchable for PX4 not for Drone_X4.
 
-param set-default MC_KRX_GAIN 5.65  # Rotation Gain --> Attitude_controller
-param set-default MC_KRY_GAIN 5.65
-param set-default MC_KRZ_GAIN 5.65
+param set-default MC_KRX_GAIN 30.0  # Rotation Gain --> Attitude_controller
+param set-default MC_KRY_GAIN 30.0
+param set-default MC_KRZ_GAIN 5.0
 
-param set-default MC_KAX_GAIN 5.5  # Angular velocity Gain --> Attitude_controller
-param set-default MC_KAY_GAIN 5.5
+param set-default MC_KAX_GAIN 30.5  # Angular velocity Gain --> Attitude_controller
+param set-default MC_KAY_GAIN 30.0
 param set-default MC_KAZ_GAIN 5.5
 
 param set-default MC_KXX_GAIN 0.95  # Prosition Gain --> Position_controller
 param set-default MC_KXY_GAIN 0.95
-param set-default MC_KXZ_GAIN 0.95
+param set-default MC_KXZ_GAIN 6.0
 
 param set-default MC_KVX_GAIN 1.2 # Velocity Gain --> Position_controller
 param set-default MC_KVY_GAIN 1.2
-param set-default MC_KVZ_GAIN 1.2
+param set-default MC_KVZ_GAIN 6.0
 
 param set-default MC_KIX_GAIN 0.06 # Integral Gain --> Position_controller
 param set-default MC_KIY_GAIN 0.06
@@ -51,35 +51,26 @@ param set-default SENS_EN_GPSSIM 1
 param set-default SENS_EN_BAROSIM 0
 param set-default SENS_EN_MAGSIM 1
 
-# param set-default EKF2_GPS_CTRL 1
-# param set-default EKF2_RNG_CTRL 1
-# param set-default EKF2_BARO_CTRL 2
-
-
 param set-default UXRCE_DDS_SYNCT 0
 
 param set-default CA_AIRFRAME 0
 param set-default CA_ROTOR_COUNT 8  # In the case of tilting_drone_x4 --> 4 rotor_motors + 4 servo_motors
 
-param set-default CA_ROTOR0_PX 0.13
-param set-default CA_ROTOR0_PY 0.13
-param set-default CA_ROTOR0_KM  0.05
-# param set-default CA_ROTOR0_CT 0.0025
+param set-default CA_ROTOR0_PX  0.13
+param set-default CA_ROTOR0_PY  0.13
+param set-default CA_ROTOR0_KM -0.05
 
 param set-default CA_ROTOR1_PX -0.13
 param set-default CA_ROTOR1_PY -0.13
 param set-default CA_ROTOR1_KM  0.05
-# param set-default CA_ROTOR1_CT 0.0025
 
-param set-default CA_ROTOR2_PX 0.13
+param set-default CA_ROTOR2_PX  0.13
 param set-default CA_ROTOR2_PY -0.13
 param set-default CA_ROTOR2_KM -0.05
-# param set-default CA_ROTOR2_CT 0.0025
 
 param set-default CA_ROTOR3_PX -0.13
-param set-default CA_ROTOR3_PY 0.13
-param set-default CA_ROTOR3_KM -0.05
-# param set-default CA_ROTOR3_CT 0.0025
+param set-default CA_ROTOR3_PY  0.13
+param set-default CA_ROTOR3_KM  0.05
 
 param set-default CA_ROTOR0_TILT 1
 param set-default CA_ROTOR1_TILT 2
@@ -123,47 +114,16 @@ param set-default SIM_GZ_SV_DIS2 500
 param set-default SIM_GZ_SV_DIS3 500
 param set-default SIM_GZ_SV_DIS4 500
 
-param set-default CA_SV_TL0_MAXA 90
-param set-default CA_SV_TL0_MINA -90
-param set-default CA_SV_TL1_MAXA 90
-param set-default CA_SV_TL1_MINA -90
-param set-default CA_SV_TL2_MAXA 90
-param set-default CA_SV_TL2_MINA -90
-param set-default CA_SV_TL3_MAXA 90
-param set-default CA_SV_TL3_MINA -90
+param set-default CA_SV_TL0_MAXA  180
+param set-default CA_SV_TL0_MINA -180
+param set-default CA_SV_TL1_MAXA  180
+param set-default CA_SV_TL1_MINA -180
+param set-default CA_SV_TL2_MAXA  180
+param set-default CA_SV_TL2_MINA -180
+param set-default CA_SV_TL3_MAXA  180
+param set-default CA_SV_TL3_MINA -180
 
 param set-default MPC_THR_HOVER 0.60
-
-
-
-# param set-default MC_KRX_GAIN 0.65  # Rotation Gain --> Attitude_controller
-# param set-default MC_KRY_GAIN 0.65
-# param set-default MC_KRZ_GAIN 0.65
-
-# param set-default MC_KAX_GAIN 0.3  # Angular velocity Gain --> Attitude_controller
-# param set-default MC_KAY_GAIN 0.3
-# param set-default MC_KAZ_GAIN 0.11
-
-# param set-default MC_KXX_GAIN 0.0  # Prosition Gain --> Position_controller
-# param set-default MC_KXY_GAIN 0.0
-# param set-default MC_KXZ_GAIN 0.1
-
-# param set-default MC_KVX_GAIN 0.0 # Velocity Gain --> Position_controller
-# param set-default MC_KVY_GAIN 0.0
-# param set-default MC_KVZ_GAIN 1.0
-
-# param set-default MC_KIX_GAIN 0.0 # Integral Gain --> Position_controller
-# param set-default MC_KIY_GAIN 0.0
-# param set-default MC_KIZ_GAIN 0.0
-
-# param set-default MC_MASS 1.5  # UAV Mass
-
-# param set-default MC_INERTIA_XX 0.07  # UAV Inertia
-# param set-default MC_INERTIA_YY 0.07
-# param set-default MC_INERTIA_ZZ 0.13
-
-
-
 
 # disable attitude failure detection
 param set-default FD_FAIL_P 0

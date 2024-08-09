@@ -144,18 +144,16 @@ void PositionControl::setPositionControlParam(const matrix::Vector3f &P, const m
 
 void PositionControl::_positionControlMR(const float dt)
 {
+//**=============================================================================================================================================================================== */
+
 	vehicle_attitude_s att;
 	_attitude_sub.update(&att);
 
 	Quatf q_state(att.q[0], att.q[1], att.q[2], att.q[3]);
 	Dcmf Rb(Quatf(q_state(0), q_state(1), q_state(2), q_state(3)));
 
-	Eulerf euler(q_state);
-
 	ControlMath::setZeroIfNanVector3f(_pos_sp);
 	ControlMath::setZeroIfNanVector3f(_vel_sp);
-
-//**=============================================================================================================================================================================== */
 
 	Vector3f e_p = _pos - _pos_sp;
 	Vector3f e_v = _vel - _vel_sp;
@@ -168,19 +166,27 @@ void PositionControl::_positionControlMR(const float dt)
 
 //**=============================================================================================================================================================================== */
 
-	// std::cout << "Rb_TT: "<< Rb.transpose() << std::endl;
-	// std::cout << "Rb: "<< Rb<< std::endl;
 
-	// std::cout << std::endl;
-	// std::cout << "_thrust_sp_1: " <<   _thr_sp(0) << "  " <<   _thr_sp(1) << "  " <<   _thr_sp(2) << std::endl;
-	// // // std::cout << "    velocity: " <<  velocity(0) << "  " <<  velocity(1) << "  " <<  velocity(2) << std::endl;
-	// // std::cout << "     _pos_sp: " <<   _pos_sp(0) << "  " <<   _pos_sp(1) << "  " <<   _pos_sp(2) << std::endl;
-	// std::cout << "        _pos: " <<      _pos(0) << "  " <<      _pos(1) << "  " <<      _pos(2) << std::endl;
-	// std::cout << "       Eular: " <<      euler.phi() << "  " <<      euler.theta() << "  " <<      euler.psi() << std::endl;
+	// Quatf uav_base_q(0.0f, 1.0f, 0.0f, 0.0f);
+	// Quatf ned_enu_q(0.0f, 0.707107f, 0.707107f, 0.0f);
+	// Quatf q_sp_(q_state(0), q_state(1), q_state(2), q_state(3));
+	// Quatf q = (ned_enu_q * q_sp_) * uav_base_q;
+
+	Eulerf euler(q_state);
+
+	float roll = euler.phi() * 57.2958f;
+	float pitch = euler.theta() * 57.2958f;
+	float yaw = euler.psi() * 57.2958f;
+
+	std::cout << std::endl;
+	// std::cout << "_thrust_sp_1: " <<   _thr_sp(0) << "  " <<    _thr_sp(1) << "  " <<   _thr_sp(2) << std::endl;
+	// std::cout << "     _pos_sp: " <<   _pos_sp(0) << "  " <<    _pos_sp(1) << "  " <<   _pos_sp(2) << std::endl;
+	std::cout << "        _pos: " <<      _pos(0) << "  " <<       _pos(1) << "  " <<      _pos(2) << std::endl;
+	std::cout << "       Eular: " <<         roll << "  " << pitch << "  " <<  yaw << std::endl;
 	// // std::cout << "         e_p: " <<       e_p(0) << "  " <<       e_p(1) << "  " <<       e_p(2) << std::endl;
 	// // std::cout << "         r_p: " <<       r_p(0) << "  " <<       r_p(1) << "  " <<       r_p(2) << std::endl;
 
-	// std::cout << std::endl;
+	std::cout << std::endl;
 
 }
 // MayurR **//

@@ -479,7 +479,6 @@ ControlAllocator::Run()
 				actuator_sp *= 0.15170242;
 				servo_sp /= 3.1415926536;
 
-
 				_control_allocation[0]->setActuatorSetpoint(actuator_sp);
 
 				if (_has_slew_rate)
@@ -509,7 +508,6 @@ ControlAllocator::Run()
 									_control_allocation[i]->getActuatorMin(), _control_allocation[i]->getActuatorMax());
 
 				vertical_actuator_sp = _control_allocation[i]->getActuatorSetpoint();
-				// std::cout << " actuator_sp: " << "  " << vertical_actuator_sp(0) << "  " << vertical_actuator_sp(1) << "  " << vertical_actuator_sp(2) << "  " << vertical_actuator_sp(3) << std::endl;
 
 				if (_has_slew_rate)
 				{
@@ -767,22 +765,13 @@ ControlAllocator::publish_actuator_controls()
 		actuator_motors.control[i] = NAN;
 	}
 
-		// std::cout << "actuator_motors:  " << actuator_motors.control[0] << "  " << actuator_motors.control[1] << "  " << actuator_motors.control[2] << "  " << actuator_motors.control[3] <<std::endl;
 	_actuator_motors_pub.publish(actuator_motors);
 
 	//** MayurR */
 	if (_drone_x4 == 1)
 	{
-		for (int j = 0; j < 4; j++)
-		{
-			actuator_servos.control[j] = servo_sp(j);
-		}
-
-		for (int i = 4; i < 8; i++)
-		{
-			actuator_servos.control[i] = NAN;
-		}
-
+		for (int j = 0; j < 4; j++) { actuator_servos.control[j] = servo_sp(j); }
+		for (int i = 4; i < 8; i++) { actuator_servos.control[i] = NAN; }
 		_actuator_servos_pub.publish(actuator_servos);
 	}
 	//** MayurR */

@@ -141,5 +141,8 @@
         ],
         "[xml]": {
                 "editor.defaultFormatter": "redhat.vscode-xml"
+        },
+        "[python]": {
+                "editor.defaultFormatter": "ms-python.autopep8"
         }
 }
