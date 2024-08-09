@@ -59,15 +59,13 @@ ControlAllocationPseudoInverse::updatePseudoInverse()
 {
 	if (_mix_update_needed) {
 		matrix::geninv(_effectiveness, _mix);
-		std::cout<<"_effectiveness:" << _effectiveness << std::endl;
-		std::cout<<"_mix :" << _mix << std::endl;
 
 		if (_normalization_needs_update && !_had_actuator_failure) {
 			updateControlAllocationMatrixScale();
 			_normalization_needs_update = false;
 		}
 
-		// normalizeControlAllocationMatrix();
+		normalizeControlAllocationMatrix();
 		_mix_update_needed = false;
 	}
 }
@@ -176,66 +174,31 @@ ControlAllocationPseudoInverse::allocate()
 {
 	// Compute new gains if needed
 	updatePseudoInverse();
-
 	_prev_actuator_sp = _actuator_sp;
-
-	// double l = 0.183; // rotor arm length
-	// double p = sqrt(2.0);
-	// double kf = 8.54858e-06f; // force constant
-	// double alpha = kf / l;
-	// double beta = 1.0 / (2 * l * l + kf * kf);
-
-	// double values[8][6] = {
-	// 			{-alpha, -alpha,   1.0,  -1.0 / l,    -1.0 / l,    -kf * beta},
-	// 			{-p,     -p,       0.0,   0.0,         0.0,        -p * l * beta},
-	// 			{-alpha,  alpha,   1.0,   1.0 / l,    -1.0 / l,    kf * beta},
-	// 			{p,      -p,       0.0,   0.0,         0.0,        -p * l * beta},
-	// 			{alpha,   alpha,   1.0,   1.0 / l,     1.0 / l,    -kf * beta},
-	// 			{p,       p,       0.0,   0.0,         0.0,        -p * l * beta} ,
-	// 			{alpha,  -alpha,   1.0,  -1.0 / l,     1.0 / l,     kf * beta},
-	// 			{-p,      p,       0.0,   0.0,         0.0,        -p * l * beta}};
-
-	float L = 0.183f; // rotor arm length
-	float p = sqrt(2.0f)/2;
-	float kf = 8.54858e-06f; // force constant
-	float kt = 0.016f;
-	float H = kf*kt;
-
-	float values[8][6] = {
-        {-1.0f / (4 * p),       -1.0f / (4 * p),       0.0f,         0.0f,                  0.0f,                  -L / (4 * (L*L + H*H))},
-        {-H / (4 * L * p),      -H / (4 * L * p),      1.0f / 4,    -1.0f / (4 * L * p),   -1.0f / (4 * L * p),    -H / (4 * (L*L + H*H))},
-        { 1.0f / (4 * p),       -1.0f / (4 * p),       0.0f,         0.0f,                  0.0f,                  -L / (4 * (L*L + H*H))},
-        {-H / (4 * L * p),       H / (4 * L * p),      1.0f / 4,     1.0f / (4 * L * p),   -1.0f / (4 * L * p),     H / (4 * (L*L + H*H))},
-        { 1.0f / (4 * p),        1.0f / (4 * p),       0.0f,         0.0f,                  0.0f,                  -L / (4 * (L*L + H*H))},
-        { H / (4 * L * p),       H / (4 * L * p),      1.0f / 4,     1.0f / (4 * L * p),    1.0f / (4 * L * p),    -H / (4 * (L*L + H*H))},
-        {-1.0f / (4 * p),        1.0f / (4 * p),       0.0f,         0.0f,                  0.0f,                  -L / (4 * (L*L + H*H))},
-        { H / (4 * L * p),      -H / (4 * L * p),      1.0f / 4,    -1.0f / (4 * L * p),    1.0f / (4 * L * p),     H / (4 * (L*L + H*H))}};
-
-
-	// float values[8][6] = {
-    //     { 1.0f / (4 * p),       -1.0f / (4 * p),       0.0f,         0.0f,                  0.0f,                   L / (4 * (L*L + H*H))},
-    //     { H / (4 * L * p),      -H / (4 * L * p),      1.0f / 4,    -1.0f / (4 * L * p),    1.0f / (4 * L * p),     H / (4 * (L*L + H*H))},
-    //     { 1.0f / (4 * p),        1.0f / (4 * p),       0.0f,         0.0f,                  0.0f,                   L / (4 * (L*L + H*H))},
-    //     {-H / (4 * L * p),      -H / (4 * L * p),      1.0f / 4,    -1.0f / (4 * L * p),   -1.0f / (4 * L * p),    -H / (4 * (L*L + H*H))},
-    //     {-1.0f / (4 * p),        1.0f / (4 * p),       0.0f,         0.0f,                  0.0f,                   L / (4 * (L*L + H*H))},
-    //     {-H / (4 * L * p),       H / (4 * L * p),      1.0f / 4,     1.0f / (4 * L * p),   -1.0f / (4 * L * p),     H / (4 * (L*L + H*H))},
-    //     {-1.0f / (4 * p),       -1.0f / (4 * p),       0.0f,         0.0f,                  0.0f,                   L / (4 * (L*L + H*H))},
-    //     { H / (4 * L * p),       H / (4 * L * p),      1.0f / 4,     1.0f / (4 * L * p),    1.0f / (4 * L * p),    -H / (4 * (L*L + H*H))}};
-
-
-
-	for (int i = 0; i < 8; ++i)
-	{
-		for (int j = 0; j < 6; ++j)
-		{
-			_mix(i, j) = values[i][j];
-		}
-	}
-	// _mix *= 0.25;
-
-	// std::cout<<"_mix :" << _mix << std::endl;
-
 
 	// Allocate
 	_actuator_sp = _actuator_trim + _mix * (_control_sp - _control_trim);
 }
+
+//** MayurR */
+void ControlAllocationPseudoInverse::allocate(const uint32_t drone_x4)
+{
+	// Compute new gains if needed
+	if (_mix_update_needed) {
+		matrix::geninv(_effectiveness, _mix);
+		std::cout<<"_effectiveness:" << _effectiveness << std::endl;
+		std::cout<<"PseudoInverse_mix :" << _mix << std::endl;
+
+		if (_normalization_needs_update && !_had_actuator_failure) {
+			updateControlAllocationMatrixScale();
+			_normalization_needs_update = false;
+		}
+		_mix_update_needed = false;
+	}
+
+	_prev_actuator_sp = _actuator_sp;
+
+	// Allocate
+	_actuator_sp = _actuator_trim + _mix * (_control_sp - _control_trim);
+}
+//** MayurR */

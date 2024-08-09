@@ -319,8 +319,6 @@ MulticopterAttitudeControl::Run()
 					_attitude_control.setAttitudeSetpoint(Quatf(vehicle_attitude_setpoint.q_d), vehicle_attitude_setpoint.yaw_sp_move_rate);
 					_thrust_setpoint_body = Vector3f(vehicle_attitude_setpoint.thrust_body);
 					_last_attitude_setpoint = vehicle_attitude_setpoint.timestamp;
-				// std::cout << "vehicle_attitude_setpoint: " << vehicle_attitude_setpoint.roll_body << "  "<<vehicle_attitude_setpoint.pitch_body <<"  "<<vehicle_attitude_setpoint.yaw_body<<std::endl;
-
 				}
 			}
 
@@ -350,12 +348,7 @@ MulticopterAttitudeControl::Run()
 				if(_vehicle_angular_velocity_sub.update(&angular_velocity) && _tilting_drone_x4_attitude_setpoint_sub.update(&x4_attitude_setpoint))
 				{
 					Vector3f _angular_velocity =  Vector3f(angular_velocity.xyz);
-
 					Quatf q_input = Quatf(x4_attitude_setpoint.q[0], x4_attitude_setpoint.q[1], x4_attitude_setpoint.q[2], x4_attitude_setpoint.q[3]);
-					std::cout << "q_input: " << q_input<<std::endl;
-
-					// Quatf q_input = Quatf(0.7071068, 0, 0.7071068, 0);
-
 					rates_sp = _attitude_control.update(dt, q, q_input, _angular_velocity);
 
 					vehicle_torque_setpoint_s vehicle_torque_setpoint{};
@@ -367,7 +360,6 @@ MulticopterAttitudeControl::Run()
 					vehicle_torque_setpoint.xyz[2] = rates_sp(2);
 
 					_vehicle_torque_setpoint_pub.publish(vehicle_torque_setpoint);
-
 				}
 			}
 			else
@@ -375,9 +367,6 @@ MulticopterAttitudeControl::Run()
 				rates_sp = _attitude_control.update(q);
 			}
 			//** MayurR */
-
-			// std::cout << "rates_sp: " << rates_sp(0) << "  "<<rates_sp(1) <<"  "<<rates_sp(2)<<std::endl;
-
 
 			const hrt_abstime now = hrt_absolute_time();
 			autotune_attitude_control_status_s pid_autotune;

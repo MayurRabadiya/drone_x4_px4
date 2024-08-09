@@ -214,69 +214,68 @@ int ActuatorEffectivenessRotors::computeEffectivenessMatrix(const Geometry &geom
 		else
 		{
 			//** MayurR */
-			// float l = 1.0f;       // rotor arm length
-			float l = 0.183f;       // rotor arm length
-			float p = 1.0f/sqrt(2.0f);
 
-			float kt = 0.016f;          // drage constant
-			float kf =  8.54858e-06f;   // force constant
+			float l   = 0.183f;       // rotor arm length
+			float p   = sqrt(2.0f)/2;
+			float kt  = 0.016f;          // drage constant
+			float kf  = 8.54858e-06f;   // force constant
 			float del = kt * kf;
 
-			effectiveness(0, 0) = 0;
-			effectiveness(1, 0) = 0;
-			effectiveness(2, 0) = 1;
-			effectiveness(3, 0) = p*l;
-			effectiveness(4, 0) = -p*l;
-			effectiveness(5, 0) = del;
+			effectiveness(0, 0) = -p;
+			effectiveness(1, 0) = -p;
+			effectiveness(2, 0) =  0;
+			effectiveness(3, 0) =  p*del;
+			effectiveness(4, 0) =  p*del;
+			effectiveness(5, 0) = -l;
 
-			effectiveness(0, 1) = 0;
-			effectiveness(1, 1) = 0;
-			effectiveness(2, 1) = 1;
-			effectiveness(3, 1) = p*l;
-			effectiveness(4, 1) = p*l;
+			effectiveness(0, 1) =  0;
+			effectiveness(1, 1) =  0;
+			effectiveness(2, 1) =  1;
+			effectiveness(3, 1) = -p*l;
+			effectiveness(4, 1) = -p*l;
 			effectiveness(5, 1) = -del;
 
-			effectiveness(0, 2) = 0;
-			effectiveness(1, 2) = 0;
-			effectiveness(2, 2) = 1;
-			effectiveness(3, 2) = -p*l;
-			effectiveness(4, 2) =  p*l;
-			effectiveness(5, 2) = del;
+			effectiveness(0, 2) =  p;
+			effectiveness(1, 2) = -p;
+			effectiveness(2, 2) =  0;
+			effectiveness(3, 2) =  p*del;
+			effectiveness(4, 2) = -p*del;
+			effectiveness(5, 2) = -l;
 
-			effectiveness(0, 3) = 0;
-			effectiveness(1, 3) = 0;
-			effectiveness(2, 3) = 1;
-			effectiveness(3, 3) = -p*l;
+			effectiveness(0, 3) =  0;
+			effectiveness(1, 3) =  0;
+			effectiveness(2, 3) =  1;
+			effectiveness(3, 3) =  p*l;
 			effectiveness(4, 3) = -p*l;
-			effectiveness(5, 3) = -del;
+			effectiveness(5, 3) =  del;
 
 			effectiveness(0, 4) =  p;
-			effectiveness(1, 4) = -p;
+			effectiveness(1, 4) =  p;
 			effectiveness(2, 4) =  0;
-			effectiveness(3, 4) =  p*del;
+			effectiveness(3, 4) = -p*del;
 			effectiveness(4, 4) = -p*del;
 			effectiveness(5, 4) = -l;
 
-			effectiveness(0, 5) = p;
-			effectiveness(1, 5) = p;
-			effectiveness(2, 5) = 0;
-			effectiveness(3, 5) = -p*del;
-			effectiveness(4, 5) = -p*del;
-			effectiveness(5, 5) = -l;
+			effectiveness(0, 5) =  0;
+			effectiveness(1, 5) =  0;
+			effectiveness(2, 5) =  1;
+			effectiveness(3, 5) =  p*l;
+			effectiveness(4, 5) =  p*l;
+			effectiveness(5, 5) = -del;
 
 			effectiveness(0, 6) = -p;
 			effectiveness(1, 6) =  p;
-			effectiveness(2, 6) = 0;
+			effectiveness(2, 6) =  0;
 			effectiveness(3, 6) = -p*del;
 			effectiveness(4, 6) =  p*del;
 			effectiveness(5, 6) = -l;
 
-			effectiveness(0, 7) = -p;
-			effectiveness(1, 7) = -p;
-			effectiveness(2, 7) = 0;
-			effectiveness(3, 7) = p*del;
-			effectiveness(4, 7) = p*del;
-			effectiveness(5, 7) = -l;
+			effectiveness(0, 7) =  0;
+			effectiveness(1, 7) =  0;
+			effectiveness(2, 7) =  1;
+			effectiveness(3, 7) = -p*l;
+			effectiveness(4, 7) =  p*l;
+			effectiveness(5, 7) =  del;
 		}
 		//** MayurR */
 

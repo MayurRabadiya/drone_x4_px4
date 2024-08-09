@@ -53,15 +53,17 @@ public:
 	ControlAllocationPseudoInverse() = default;
 	virtual ~ControlAllocationPseudoInverse() = default;
 
+	//** MayurR */
+	void allocate(const uint32_t drone_x4) override;
+	//** MayurR */
+
 	void allocate() override;
 	void setEffectivenessMatrix(const matrix::Matrix<float, NUM_AXES, NUM_ACTUATORS> &effectiveness,
 				    const ActuatorVector &actuator_trim, const ActuatorVector &linearization_point, int num_actuators,
 				    bool update_normalization_scale) override;
 
 protected:
-	// matrix::Matrix<float, NUM_ACTUATORS, NUM_AXES> _mix;
-// MayurR
-	matrix::Matrix<float, NUM_ACTUATORS, 8> _mix;
+	matrix::Matrix<float, NUM_ACTUATORS, NUM_AXES> _mix;
 	bool _uav_type;
 
 

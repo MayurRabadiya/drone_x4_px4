@@ -464,26 +464,20 @@ ControlAllocator::Run()
 				_control_allocation[i]->setControlSetpoint(c[i]);
 
 				// Do allocation
-				_control_allocation[i]->allocate();
-				_actuator_effectiveness->allocateAuxilaryControls(dt, i, _control_allocation[i]->_actuator_sp); // flaps and spoilers
+				_control_allocation[i]->allocate(_drone_x4);
 				_actuator_effectiveness->updateSetpoint(c[i], i, _control_allocation[i]->_actuator_sp,
 										 _control_allocation[i]->getActuatorMin(),
 										 _control_allocation[i]->getActuatorMax());
-
 				vertical_actuator_sp = _control_allocation[i]->getActuatorSetpoint();
 
 				for (int j = 0; j < 4; j++)
 				{
 					actuator_sp(j) = (sqrtf(powf(vertical_actuator_sp(2*j), 2) + powf(vertical_actuator_sp(2*j+1), 2)));
-					// servo_sp(j) = atan2f(vertical_actuator_sp(2*j+1), vertical_actuator_sp(2*j));
 					servo_sp(j) = atan2f(vertical_actuator_sp(2*j), vertical_actuator_sp(2*j+1));
 				}
 
 				actuator_sp *= 0.15170242;
-				// actuator_sp *= 0.686502;
-
 				servo_sp /= 3.1415926536;
-				// servo_sp *= 0.0;
 
 
 				_control_allocation[0]->setActuatorSetpoint(actuator_sp);

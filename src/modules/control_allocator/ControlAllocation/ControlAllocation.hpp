@@ -98,6 +98,11 @@ public:
 	 */
 	virtual void allocate() = 0;
 
+	//** MayurR */
+	virtual void allocate(const uint32_t drone_x4) = 0;
+	//** MayurR */
+
+
 	/**
 	 * Set actuator failure flag
 	 * This prevents a change of the scaling in the matrix normalization step
