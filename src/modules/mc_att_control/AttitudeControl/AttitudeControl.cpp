@@ -112,7 +112,7 @@ matrix::Vector3f AttitudeControl::update(const float dt, const Quatf &q_state, c
 
 		_integral = e_R * dt;
 
-	Vector3f _torque_sp = _Ib * (e_R.emult(_rotation_gain) + e_w.emult(_angularVal_gain) +  _integral.emult(Vector3f(0.05f, 0.05f, 0.05f)));
+	Vector3f _torque_sp = _Ib * (e_R.emult(_rotation_gain) + e_w.emult(_angularVal_gain) +  _integral.emult(Vector3f(0.0f, 0.0f, 0.0f)));
 
 
 

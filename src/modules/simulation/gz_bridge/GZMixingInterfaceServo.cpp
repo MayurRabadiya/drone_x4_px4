@@ -66,10 +66,7 @@ bool GZMixingInterfaceServo::updateOutputs(bool stop_motors, uint16_t outputs[MA
 			gz::msgs::Double servo_output;
 			///TODO: Normalize output data
 
-			double output = ((outputs[i] - 500) / 500.0) * 3.1415926536;
-			// std::cout << "outputs[" << i << "]: " << outputs[i] << std::endl;
-			// std::cout << "  output: " << output << std::endl;
-			// std::cout << "outputs[" << i << "]: " << outputs[i] << "          " << "  output: " << output << std::endl;
+			double output = ((outputs[i] - 500) / 500.0) * 6.2657320147;
 			servo_output.set_data(output);
 
 			if (servo_pub.Valid()) {
