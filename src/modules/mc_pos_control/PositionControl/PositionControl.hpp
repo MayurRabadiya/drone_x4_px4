@@ -258,6 +258,8 @@ private:
 	matrix::Vector3f _position_gain;
 	matrix::Vector3f _velocity_gain;
 	matrix::Vector3f _integral_gain;
+	matrix::Vector3f _integral{0.0f, 0.0f, 0.0f};
+
 	float _mass;
 	//** MayurR */
 };

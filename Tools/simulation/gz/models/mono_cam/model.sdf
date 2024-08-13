@@ -17,6 +17,15 @@
           <izz>0.00004</izz>
         </inertia>
       </inertial>
+      <visual name="camera_visual">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://mono_cam/camera.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
       <sensor name="imager" type="camera">
         <pose>0 0 0 0 0 0</pose>
         <camera>

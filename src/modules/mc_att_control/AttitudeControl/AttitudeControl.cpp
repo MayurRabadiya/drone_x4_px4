@@ -79,24 +79,44 @@ matrix::Vector3f AttitudeControl::update(const float dt, const Quatf &q_state, c
 	_Ib(1, 1) = _inertia(1);
 	_Ib(2, 2) = _inertia(2);
 	q_sp = q_input;
-	q_sp.normalized();
-	q_state.normalized();
+	// q_sp.normalized();
+	// q_state.normalized();
 
 	_R_sp = Dcmf(Quatf(q_sp(0), q_sp(1), q_sp(2), q_sp(3)));
 	_R_state = Dcmf(Quatf(q_state(0), q_state(1), q_state(2), q_state(3)));
 
-	Vector3f e_R = 0.5f * Dcmf(_R_sp.transpose()*_R_state - _R_state.transpose()*_R_sp).vee();
-	Vector3f r_R = -e_R.emult(_rotation_gain) - angular_velocity.emult(_angularVal_gain);
-	Vector3f _torque_sp = _Ib * r_R;
+	// _integral = -angular_velocity * dt;
+
+	// Vector3f e_R = 0.5f * Dcmf(_R_sp.transpose()*_R_state - _R_state.transpose()*_R_sp).vee();
+	// Vector3f r_R = -e_R.emult(_rotation_gain) - angular_velocity.emult(_angularVal_gain);
+	// Vector3f _torque_sp = _Ib * r_R;
+	// _torque_sp += _integral.emult(Vector3f(2.5f, 2.5f, 2.5f));
+
+	Vector3f e_w = -angular_velocity;
+	SquareMatrix3f Psi = _R_state.transpose() * _R_sp;
+
+	float cos_theta = (Psi.trace() - 1.0f) / 2.0f;
+    cos_theta = math::constrain(cos_theta, -1.0f, 1.0f); // Ensure cos_theta is within valid range
+    float theta = acosf(cos_theta);
+
+	Vector3f e_R;
+    if (theta < 1e-6f) {
+        // If theta is very small, return zero vector (no rotation)
+        e_R.zero();
+    } else {
+        float factor = theta / (2.0f * sinf(theta));
+        e_R(0) = factor * (Psi(2, 1) - Psi(1, 2));
+        e_R(1) = factor * (Psi(0, 2) - Psi(2, 0));
+        e_R(2) = factor * (Psi(1, 0) - Psi(0, 1));
+    }
+
+		_integral = e_R * dt;
+
+	Vector3f _torque_sp = _Ib * (e_R.emult(_rotation_gain) + e_w.emult(_angularVal_gain) +  _integral.emult(Vector3f(0.05f, 0.05f, 0.05f)));
 
 
-	// std::cout << "_torque_sp      : " << _torque_sp(0) << "  "<<_torque_sp(1) <<"  "<<_torque_sp(2)<<std::endl;
-	// std::cout << "     e_R: " << e_R(0) << "  "<<e_R(1) <<"  "<<e_R(2)<<std::endl;
-	// std::cout << " q_state: " << q_state(0) << "  "<<q_state(1) <<"  "<<q_state(2)<<"  "<<q_state(3)<<std::endl;
 
-	// // std::cout << "angular_velocity: " << angular_velocity(0) << "  "<<angular_velocity(1) <<"  "<<angular_velocity(2)<<std::endl;
 
-	// std::cout <<std::endl;
 	return _torque_sp;
 
 }
@@ -105,10 +125,6 @@ matrix::Vector3f AttitudeControl::update(const float dt, const Quatf &q_state, c
 matrix::Vector3f AttitudeControl::update(const Quatf &q) const
 {
 	Quatf qd = _attitude_setpoint_q;
-
-
-	// std::cout << "q_state: " << q_state <<std::endl;
-
 
 	// calculate reduced desired attitude neglecting vehicle's yaw to prioritize roll and pitch
 	const Vector3f e_z = q.dcm_z();

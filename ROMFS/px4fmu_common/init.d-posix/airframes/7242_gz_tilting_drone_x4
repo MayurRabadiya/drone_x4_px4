@@ -25,27 +25,27 @@ param set-default MC_KRX_GAIN 30.0  # Rotation Gain --> Attitude_controller
 param set-default MC_KRY_GAIN 30.0
 param set-default MC_KRZ_GAIN 5.0
 
-param set-default MC_KAX_GAIN 30.5  # Angular velocity Gain --> Attitude_controller
+param set-default MC_KAX_GAIN 30.0  # Angular velocity Gain --> Attitude_controller
 param set-default MC_KAY_GAIN 30.0
 param set-default MC_KAZ_GAIN 5.5
 
 param set-default MC_KXX_GAIN 0.95  # Prosition Gain --> Position_controller
 param set-default MC_KXY_GAIN 0.95
-param set-default MC_KXZ_GAIN 6.0
+param set-default MC_KXZ_GAIN 9.0
 
-param set-default MC_KVX_GAIN 1.2 # Velocity Gain --> Position_controller
-param set-default MC_KVY_GAIN 1.2
-param set-default MC_KVZ_GAIN 6.0
+param set-default MC_KVX_GAIN 2.2 # Velocity Gain --> Position_controller
+param set-default MC_KVY_GAIN 2.2
+param set-default MC_KVZ_GAIN 9.0
 
-param set-default MC_KIX_GAIN 0.06 # Integral Gain --> Position_controller
-param set-default MC_KIY_GAIN 0.06
-param set-default MC_KIZ_GAIN 0.06
+param set-default MC_KIX_GAIN 0.01 # Integral Gain --> Position_controller
+param set-default MC_KIY_GAIN 0.01
+param set-default MC_KIZ_GAIN 0.01
 
 param set-default MC_MASS 1.8  # UAV Mass
 
-param set-default MC_INERTIA_XX 0.07  # UAV Inertia
-param set-default MC_INERTIA_YY 0.07
-param set-default MC_INERTIA_ZZ 0.07
+param set-default MC_INERTIA_XX 0.065  # UAV Inertia
+param set-default MC_INERTIA_YY 0.065
+param set-default MC_INERTIA_ZZ 0.065
 
 param set-default SENS_EN_GPSSIM 1
 param set-default SENS_EN_BAROSIM 0
@@ -87,10 +87,10 @@ param set-default SIM_GZ_EC_MIN2 150
 param set-default SIM_GZ_EC_MIN3 150
 param set-default SIM_GZ_EC_MIN4 150
 
-param set-default SIM_GZ_EC_MAX1 1000
-param set-default SIM_GZ_EC_MAX2 1000
-param set-default SIM_GZ_EC_MAX3 1000
-param set-default SIM_GZ_EC_MAX4 1000
+param set-default SIM_GZ_EC_MAX1 1100
+param set-default SIM_GZ_EC_MAX2 1100
+param set-default SIM_GZ_EC_MAX3 1100
+param set-default SIM_GZ_EC_MAX4 1100
 
 param set-default CA_SV_CS_COUNT 4
 

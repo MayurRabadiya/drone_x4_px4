@@ -158,10 +158,14 @@ void PositionControl::_positionControlMR(const float dt)
 	Vector3f e_p = _pos - _pos_sp;
 	Vector3f e_v = _vel - _vel_sp;
 
+
+	_vel_int += e_p * dt;
+
+
 	ControlMath::setZeroIfNanVector3f(e_p);
 	ControlMath::setZeroIfNanVector3f(_acc_sp);
 
-	Vector3f r_p = e_p.emult(_position_gain) + e_v.emult(_velocity_gain) + _mass * Vector3f(0.0f, 0.0f, CONSTANTS_ONE_G);
+	Vector3f r_p = e_p.emult(_position_gain) + e_v.emult(_velocity_gain) + _vel_int.emult(_integral_gain) + _mass * Vector3f(0.0f, 0.0f, CONSTANTS_ONE_G);
 	_thr_sp = Rb.transpose() * r_p ;
 
 //**=============================================================================================================================================================================== */
@@ -364,51 +368,3 @@ void PositionControl::getAttitudeSetpoint(vehicle_attitude_setpoint_s &attitude_
 
 
 
-
-
-	// Matrix<float, 8U, 6U> _mix;
-
-	// float L = 0.183f; // rotor arm length
-	// float p = sqrt(2.0f)/2;
-	// float kf = 8.54858e-06f; // force constant
-	// float kt = 0.016f;
-	// float H = kf*kt;
-
-	// float values[8][6] = {
-    //     { 1.0f / (4 * p),       -1.0f / (4 * p),       0.0f,         0.0f,                  0.0f,                   L / (4 * (L*L + H*H))},
-    //     { H / (4 * L * p),     -H / (4 * L * p),     1.0f / 4,    -1.0f / (4 * L * p),    1.0f / (4 * L * p),     H / (4 * (L*L + H*H))},
-    //     { 1.0f / (4 * p),        1.0f / (4 * p),       0.0f,         0.0f,                  0.0f,                   L / (4 * (L*L + H*H))},
-    //     {-H / (4 * L * p),    -H / (4 * L * p),     1.0f / 4,    -1.0f / (4 * L * p),   -1.0f / (4 * L * p),    -H / (4 * (L*L + H*H))},
-    //     {-1.0f / (4 * p),       1.0f / (4 * p),       0.0f,         0.0f,                  0.0f,                   L / (4 * (L*L + H*H))},
-    //     {-H / (4 * L * p),     H / (4 * L * p),     1.0f / 4,     1.0f / (4 * L * p),   -1.0f / (4 * L * p),     H / (4 * (L*L + H*H))},
-    //     {-1.0f / (4 * p),      -1.0f / (4 * p),       0.0f,         0.0f,                  0.0f,                   L / (4 * (L*L + H*H))},
-    //     { H / (4 * L * p),      H / (4 * L * p),     1.0f / 4,     1.0f / (4 * L * p),    1.0f / (4 * L * p),    -H / (4 * (L*L + H*H))}};
-
-	// for (int i = 0; i < 8; ++i)
-	// {
-	// 	for (int j = 0; j < 6; ++j)
-	// 	{
-	// 		_mix(i, j) = values[i][j];
-	// 	}
-	// }
-
-	// Vector<float, 8U> act;
-	// Vector<float,6U> u;
-	// u(0) = t(0);
-	// u(1) = t(1);
-	// u(2) = t(2);
-	// u(3) = -4.20465e-05f;
-	// u(4) = -0.00259095f;
-	// u(5) = 6.7724e-05f;
-
-	// act = _mix * u;
-
-	// matrix::Vector<float, 4> actuator_sp;
-	// matrix::Vector<float, 4> servo_sp;
-
-
-	// for (int j = 0; j < 4; j++)
-	// {
-	// 	actuator_sp(j) = (sqrtf(powf(act(2 * j), 2) + powf(act(2 * j + 1), 2)));
-	// 	servo_sp(j) = atan2f(act(2 * j), act(2 * j +1));
-	// }

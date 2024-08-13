@@ -140,3 +140,4 @@ PARAM_DEFINE_FLOAT(MC_ACRO_SUPEXPO, 0.f);
  * @group Multicopter Acro Mode
  */
 PARAM_DEFINE_FLOAT(MC_ACRO_SUPEXPOY, 0.f);
+

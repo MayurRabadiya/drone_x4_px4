@@ -45,7 +45,7 @@ parameters:
                 2: Automatic
             default: 2
 
-#MayurR
+# ** MayurR *
         CA_CONTROLLER:
             description:
                 short: Type of Controller. custom or px4.
@@ -57,7 +57,7 @@ parameters:
                 0: PX4 controller.
                 1: Custom controller.
             default: 0
-#MayurR_E
+# ** MayurR *
 
         # Motor parameters
         CA_R_REV:

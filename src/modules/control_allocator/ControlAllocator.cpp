@@ -451,10 +451,8 @@ ControlAllocator::Run()
 			}
 		}
 
-		matrix::Vector<float, NUM_ACTUATORS> vertical_actuator_sp;
+		matrix::Vector<float, NUM_ACTUATORS> actuator_input;
 		matrix::Vector<float, NUM_ACTUATORS> actuator_sp;
-
-
 
 		for (int i = 0; i < _num_control_allocation; ++i)
 		{
@@ -468,16 +466,16 @@ ControlAllocator::Run()
 				_actuator_effectiveness->updateSetpoint(c[i], i, _control_allocation[i]->_actuator_sp,
 										 _control_allocation[i]->getActuatorMin(),
 										 _control_allocation[i]->getActuatorMax());
-				vertical_actuator_sp = _control_allocation[i]->getActuatorSetpoint();
+				actuator_input = _control_allocation[i]->getActuatorSetpoint();
 
 				for (int j = 0; j < 4; j++)
 				{
-					actuator_sp(j) = (sqrtf(powf(vertical_actuator_sp(2*j), 2) + powf(vertical_actuator_sp(2*j+1), 2)));
-					servo_sp(j) = atan2f(vertical_actuator_sp(2*j), vertical_actuator_sp(2*j+1));
+					actuator_sp(j) = (sqrtf(powf(actuator_input(2*j), 2) + powf(actuator_input(2*j+1), 2)));
+					servo_sp(j) = atan2f(actuator_input(2*j), actuator_input(2*j+1));
 				}
 
-				actuator_sp *= 0.15170242;
-				servo_sp /= 3.1415926536;
+				actuator_sp *= 0.135892781;    // Scalling factor. Calculated based on: 4 * uav_mass * gravity * 0.6679
+				servo_sp    /= 3.1415926536;  // Scalling factor. PX4 only accepts input in range [-1, 1]
 
 				_control_allocation[0]->setActuatorSetpoint(actuator_sp);
 
@@ -486,15 +484,6 @@ ControlAllocator::Run()
 					_control_allocation[i]->applySlewRateLimit(dt);
 				}
 				_control_allocation[i]->clipActuatorSetpoint();
-
-				// std::cout << "vertical_actuator_sp_1: " << "  " << vertical_actuator_sp(0) << "  " << vertical_actuator_sp(2) << "  " << vertical_actuator_sp(4) << "  " << vertical_actuator_sp(6) << std::endl;
-				// std::cout << "vertical_actuator_sp_2: " << "  " << vertical_actuator_sp(1) << "  " << vertical_actuator_sp(3) << "  " << vertical_actuator_sp(5) << "  " << vertical_actuator_sp(7) << std::endl;
-				// std::cout << std::endl;
-
-				// std::cout << "    servo_sp: " << "  " << servo_sp(0) << "  " << servo_sp(1) << "  " << servo_sp(2) << "  " << servo_sp(3) << std::endl;
-				// std::cout << " actuator_sp: " << "  " << actuator_sp(0) << "  " << actuator_sp(1) << "  " << actuator_sp(2) << "  " << actuator_sp(3) << std::endl;
-				// std::cout << std::endl;
-
 
 			} //** MayurR */
 			else
@@ -507,7 +496,7 @@ ControlAllocator::Run()
 				_actuator_effectiveness->updateSetpoint(c[i], i, _control_allocation[i]->_actuator_sp,
 									_control_allocation[i]->getActuatorMin(), _control_allocation[i]->getActuatorMax());
 
-				vertical_actuator_sp = _control_allocation[i]->getActuatorSetpoint();
+				actuator_input = _control_allocation[i]->getActuatorSetpoint();
 
 				if (_has_slew_rate)
 				{
