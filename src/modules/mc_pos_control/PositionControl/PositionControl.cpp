@@ -164,19 +164,15 @@ void PositionControl::_positionControlMR(const float dt)
 	Vector3f r_p = e_p.emult(_position_gain) + e_v.emult(_velocity_gain) + _vel_int.emult(_integral_gain) + _mass * Vector3f(0.0f, 0.0f, CONSTANTS_ONE_G);
 	_thr_sp = Rb.transpose() * r_p ;
 
-	Eulerf euler(q_state);
-	float roll = euler.phi() * 57.2958f;
-	float pitch = euler.theta() * 57.2958f;
-	float yaw = euler.psi() * 57.2958f;
+	// Eulerf euler(q_state);
+	// float roll = euler.phi() * 57.2958f;
+	// float pitch = euler.theta() * 57.2958f;
+	// float yaw = euler.psi() * 57.2958f;
 
-	std::cout << std::endl;
-	// std::cout << "_thrust_sp_1: " <<   _thr_sp(0) << "  " <<    _thr_sp(1) << "  " <<   _thr_sp(2) << std::endl;
-	// std::cout << "     _pos_sp: " <<   _pos_sp(0) << "  " <<    _pos_sp(1) << "  " <<   _pos_sp(2) << std::endl;
-	//std::cout << "        _pos: " <<      _pos(0) << "  " <<       _pos(1) << "  " <<      _pos(2) << std::endl;
-	//std::cout << "       Eular: " <<         roll << "  " << pitch << "  " <<  yaw << std::endl;
-	// // std::cout << "         e_p: " <<       e_p(0) << "  " <<       e_p(1) << "  " <<       e_p(2) << std::endl;
-	// // std::cout << "         r_p: " <<       r_p(0) << "  " <<       r_p(1) << "  " <<       r_p(2) << std::endl;
-	std::cout << std::endl;
+	// std::cout << std::endl;
+	// //std::cout << "        _pos: " <<      _pos(0) << "  " <<       _pos(1) << "  " <<      _pos(2) << std::endl;
+	// //std::cout << "       Eular: " <<         roll << "  " << pitch << "  " <<  yaw << std::endl;
+	// std::cout << std::endl;
 //**=============================================================================================================================================================================== */
 
 }
