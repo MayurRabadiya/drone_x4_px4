@@ -474,8 +474,8 @@ ControlAllocator::Run()
 					servo_sp(j) = atan2f(actuator_input(2*j), actuator_input(2*j+1));
 				}
 
-				actuator_sp *= 0.135892781;    // Scalling factor. Calculated based on: 4 * uav_mass * gravity * 0.6679
-				servo_sp    /= 6.2657320147;  // Scalling factor. PX4 only accepts input in range [-1, 1]
+				actuator_sp *= 0.135892781;    // Scalling factor. Calculated based on: 4 * 0.58873 / (uav_mass * gravity)
+				servo_sp    /= 6.2657320147;   // Scalling factor. PX4 only accepts input in range [-1, 1]
 
 				_control_allocation[0]->setActuatorSetpoint(actuator_sp);
 

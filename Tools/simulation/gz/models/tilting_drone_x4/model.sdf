@@ -226,7 +226,7 @@
           <lower>-6.2831853072</lower>
           <upper>6.2831853072</upper>
           <effort>100</effort>
-          <velocity>8.26797</velocity>
+          <velocity>100.26797</velocity>
         </limit>
         <dynamics>
           <damping>0.1</damping>
@@ -299,7 +299,7 @@
           <lower>-6.2831853072</lower>
           <upper>6.2831853072</upper>
           <effort>100</effort>
-          <velocity>8.26797</velocity>
+          <velocity>100.26797</velocity>
         </limit>
         <dynamics>
           <damping>0.1</damping>
@@ -372,7 +372,7 @@
           <lower>-6.2831853072</lower>
           <upper>6.2831853072</upper>
           <effort>100</effort>
-          <velocity>8.26797</velocity>
+          <velocity>100.26797</velocity>
         </limit>
         <dynamics>
           <damping>0.1</damping>
@@ -445,7 +445,7 @@
           <lower>-6.2831853072</lower>
           <upper>6.2831853072</upper>
           <effort>100</effort>
-          <velocity>8.26797</velocity>
+          <velocity>100.26797</velocity>
         </limit>
         <dynamics>
           <damping>0.1</damping>
@@ -532,7 +532,7 @@
         </geometry>
         <material>
           <script>
-            <name>Gazebo/DarkGray</name>
+            <name>Gazebo/Gray</name>
             <uri>file://media/materials/scripts/gazebo.material</uri>
           </script>
         </material>
@@ -666,7 +666,7 @@
         </geometry>
         <material>
           <script>
-            <name>Gazebo/DarkGray</name>
+            <name>Gazebo/Gray</name>
             <uri>file://media/materials/scripts/gazebo.material</uri>
           </script>
         </material>

@@ -208,7 +208,10 @@ set(msg_files
 	TaskStackInfo.msg
 	TecsStatus.msg
 	TelemetryStatus.msg
+	# //** MayurR */
 	TiltingDroneX4AttitudeSetpoint.msg
+	TiltingDroneX4Gains.msg
+	# //** MayurR */
 	TiltrotorExtraControls.msg
 	TimesyncStatus.msg
 	TrajectoryBezier.msg

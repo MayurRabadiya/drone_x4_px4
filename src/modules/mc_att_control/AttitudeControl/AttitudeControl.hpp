@@ -71,7 +71,7 @@ public:
 	 * @param rotation_gain 3D vector containing gains for x, y, z
 	 * @param angularVal_gain 3D vector containing gains for x, y, z
 	 */
-	void setAtitttudeGain(const matrix::Vector3f &rotation_gain, const matrix::Vector3f &angularVal_gain);
+	void setAtitttudeGain(const matrix::Vector3f &rotation_gain, const matrix::Vector3f &angularVal_gain, const matrix::Vector3f &integral_gain);
 
 	/**
 	 * Set  Inertia matrix
@@ -131,7 +131,11 @@ private:
 	matrix::Vector3f _inertia;
 	matrix::Vector3f _rotation_gain;
 	matrix::Vector3f _angularVal_gain;
+	matrix::Vector3f _integral_gain;
 	matrix::Vector3f _integral{0.0f, 0.0f, 0.0f};
+	matrix::Vector3f _angular_velocity_prev{0.0f, 0.0f, 0.0f};
+	//** MayurR */
+
 
 
 	matrix::Quatf _attitude_setpoint_q; ///< latest known attitude setpoint e.g. from position control

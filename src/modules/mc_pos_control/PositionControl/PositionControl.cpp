@@ -158,26 +158,13 @@ void PositionControl::_positionControlMR(const float dt)
 	Vector3f e_p = _pos - _pos_sp;
 	Vector3f e_v = _vel - _vel_sp;
 
-
 	_vel_int += e_p * dt;
-
-
 	ControlMath::setZeroIfNanVector3f(e_p);
-	ControlMath::setZeroIfNanVector3f(_acc_sp);
 
 	Vector3f r_p = e_p.emult(_position_gain) + e_v.emult(_velocity_gain) + _vel_int.emult(_integral_gain) + _mass * Vector3f(0.0f, 0.0f, CONSTANTS_ONE_G);
 	_thr_sp = Rb.transpose() * r_p ;
 
-//**=============================================================================================================================================================================== */
-
-
-	// Quatf uav_base_q(0.0f, 1.0f, 0.0f, 0.0f);
-	// Quatf ned_enu_q(0.0f, 0.707107f, 0.707107f, 0.0f);
-	// Quatf q_sp_(q_state(0), q_state(1), q_state(2), q_state(3));
-	// Quatf q = (ned_enu_q * q_sp_) * uav_base_q;
-
 	Eulerf euler(q_state);
-
 	float roll = euler.phi() * 57.2958f;
 	float pitch = euler.theta() * 57.2958f;
 	float yaw = euler.psi() * 57.2958f;
@@ -189,8 +176,8 @@ void PositionControl::_positionControlMR(const float dt)
 	//std::cout << "       Eular: " <<         roll << "  " << pitch << "  " <<  yaw << std::endl;
 	// // std::cout << "         e_p: " <<       e_p(0) << "  " <<       e_p(1) << "  " <<       e_p(2) << std::endl;
 	// // std::cout << "         r_p: " <<       r_p(0) << "  " <<       r_p(1) << "  " <<       r_p(2) << std::endl;
-
 	std::cout << std::endl;
+//**=============================================================================================================================================================================== */
 
 }
 // MayurR **//
@@ -199,12 +186,6 @@ void PositionControl::_positionControl()
 {
 	// P-position controller
 	Vector3f vel_sp_position = (_pos_sp - _pos).emult(_gain_pos_p);
-
-	// std::cout << "        _pos: " <<_pos(0) << "  " <<_pos(1) << "  " <<_pos(2) << std::endl;
-	// std::cout << "     _pos_sp: " <<_pos_sp(0) << "  " <<_pos_sp(1) << "  " <<_pos_sp(2) << std::endl;
-	// std::cout << "vel_sp_position: " <<_gain_pos_p(0) << "  " <<_gain_pos_p(1) << "  " <<_gain_pos_p(2) << std::endl;
-	// std::cout << std::endl;
-
 
 	// Position and feed-forward velocity setpoints or position states being NAN results in them not having an influence
 	ControlMath::addIfNotNanVector3f(_vel_sp, vel_sp_position);

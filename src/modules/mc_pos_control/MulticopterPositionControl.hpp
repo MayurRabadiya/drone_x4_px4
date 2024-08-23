@@ -68,6 +68,10 @@
 #include <uORB/topics/vehicle_local_position.h>
 #include <uORB/topics/vehicle_local_position_setpoint.h>
 
+//** MayurR */
+#include <uORB/topics/tilting_drone_x4_gains.h>
+//** MayurR */
+
 using namespace time_literals;
 
 class MulticopterPositionControl : public ModuleBase<MulticopterPositionControl>, public ModuleParams,
@@ -102,6 +106,10 @@ private:
 	uORB::SubscriptionCallbackWorkItem _local_pos_sub{this, ORB_ID(vehicle_local_position)};	/**< vehicle local position */
 
 	uORB::SubscriptionInterval _parameter_update_sub{ORB_ID(parameter_update), 1_s};
+
+	//**MayurR */
+	uORB::Subscription _tilting_drone_x4_gains_sub{ORB_ID(tilting_drone_x4_gains)};
+	//**MayurR */
 
 	uORB::Subscription _hover_thrust_estimate_sub{ORB_ID(hover_thrust_estimate)};
 	uORB::Subscription _trajectory_setpoint_sub{ORB_ID(trajectory_setpoint)};

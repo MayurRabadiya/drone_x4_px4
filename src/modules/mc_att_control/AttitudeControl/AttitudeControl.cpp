@@ -56,10 +56,11 @@ void AttitudeControl::setProportionalGain(const Vector3f &proportional_gain, con
 
 
 //** MayurR */
-void AttitudeControl::setAtitttudeGain(const Vector3f &rotation_gain, const Vector3f &angularVal_gain)
+void AttitudeControl::setAtitttudeGain(const Vector3f &rotation_gain, const Vector3f &angularVal_gain, const matrix::Vector3f &integral_gain)
 {
-	_rotation_gain = rotation_gain;
+	_rotation_gain   = rotation_gain;
 	_angularVal_gain = angularVal_gain;
+	_integral_gain   = integral_gain;
 }
 
 void AttitudeControl::setInertia(const matrix::Vector3f &inertia)
@@ -69,7 +70,6 @@ void AttitudeControl::setInertia(const matrix::Vector3f &inertia)
 
 matrix::Vector3f AttitudeControl::update(const float dt, const Quatf &q_state, const Quatf &q_input, const Vector3f &angular_velocity)
 {
-	// Vector3f _Ki_w = Vector3f (0.06f, 0.06f, 0.06f);
 	SquareMatrix3f _Ib;
 	SquareMatrix3f _R_sp;
 	SquareMatrix3f _R_state;
@@ -79,18 +79,22 @@ matrix::Vector3f AttitudeControl::update(const float dt, const Quatf &q_state, c
 	_Ib(1, 1) = _inertia(1);
 	_Ib(2, 2) = _inertia(2);
 	q_sp = q_input;
-	// q_sp.normalized();
-	// q_state.normalized();
 
 	_R_sp = Dcmf(Quatf(q_sp(0), q_sp(1), q_sp(2), q_sp(3)));
 	_R_state = Dcmf(Quatf(q_state(0), q_state(1), q_state(2), q_state(3)));
+
+
+// ======================================================================================================================================================
 
 	// _integral = -angular_velocity * dt;
 
 	// Vector3f e_R = 0.5f * Dcmf(_R_sp.transpose()*_R_state - _R_state.transpose()*_R_sp).vee();
 	// Vector3f r_R = -e_R.emult(_rotation_gain) - angular_velocity.emult(_angularVal_gain);
 	// Vector3f _torque_sp = _Ib * r_R;
-	// _torque_sp += _integral.emult(Vector3f(2.5f, 2.5f, 2.5f));
+	// _torque_sp += _integral.emult(Vector3f(2.0f, 2.0f, 0.0f));
+
+
+// ======================================================================================================================================================
 
 	Vector3f e_w = -angular_velocity;
 	SquareMatrix3f Psi = _R_state.transpose() * _R_sp;
@@ -110,14 +114,12 @@ matrix::Vector3f AttitudeControl::update(const float dt, const Quatf &q_state, c
         e_R(2) = factor * (Psi(1, 0) - Psi(0, 1));
     }
 
-		_integral = e_R * dt;
+	_integral = e_w * dt;
 
-	Vector3f _torque_sp = _Ib * (e_R.emult(_rotation_gain) + e_w.emult(_angularVal_gain) +  _integral.emult(Vector3f(0.0f, 0.0f, 0.0f)));
-
-
-
+	Vector3f _torque_sp = _Ib * (e_R.emult(_rotation_gain) + e_w.emult(_angularVal_gain) +  _integral.emult(_integral_gain));
 
 	return _torque_sp;
+// ======================================================================================================================================================
 
 }
 //** MayurR */

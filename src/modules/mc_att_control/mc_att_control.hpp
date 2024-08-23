@@ -61,8 +61,10 @@
 
 //** MayurR */
 #include <uORB/topics/vehicle_angular_velocity.h>
-#include <uORB/topics/tilting_drone_x4_attitude_setpoint.h>
 #include <uORB/topics/vehicle_torque_setpoint.h>
+#include <uORB/topics/tilting_drone_x4_attitude_setpoint.h>
+#include <uORB/topics/tilting_drone_x4_gains.h>
+
 //** MayurR */
 
 
@@ -115,9 +117,9 @@ private:
 
 	//** MayurR */
 	uORB::Subscription _tilting_drone_x4_attitude_setpoint_sub{ORB_ID(tilting_drone_x4_attitude_setpoint)};
+	uORB::Subscription _tilting_drone_x4_gains_sub{ORB_ID(tilting_drone_x4_gains)};
 	uORB::SubscriptionCallbackWorkItem _vehicle_angular_velocity_sub{this, ORB_ID(vehicle_angular_velocity)};
 	uORB::Publication<vehicle_torque_setpoint_s> _vehicle_torque_setpoint_pub{ORB_ID(vehicle_torque_setpoint)};
-
 	//** MayurR */
 
 	uORB::SubscriptionCallbackWorkItem _vehicle_attitude_sub{this, ORB_ID(vehicle_attitude)};
@@ -195,6 +197,10 @@ private:
 		(ParamFloat<px4::params::MC_KAX_GAIN>) _param_mc_kax_gain,
 		(ParamFloat<px4::params::MC_KAY_GAIN>) _param_mc_kay_gain,
 		(ParamFloat<px4::params::MC_KAZ_GAIN>) _param_mc_kaz_gain,
+
+		(ParamFloat<px4::params::MC_KAIX_GAIN>) _param_mc_kix_gain,
+		(ParamFloat<px4::params::MC_KAIY_GAIN>) _param_mc_kiy_gain,
+		(ParamFloat<px4::params::MC_KAIZ_GAIN>) _param_mc_kiz_gain,
 
 		(ParamFloat<px4::params::MC_INERTIA_XX>) _param_mc_inertia_xx,
 		(ParamFloat<px4::params::MC_INERTIA_YY>) _param_mc_inertia_yy,

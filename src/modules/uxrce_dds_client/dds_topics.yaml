@@ -179,6 +179,9 @@ subscriptions:
     ## MayurR ##
   - topic: /fmu/in/tilting_drone_x4_attitude_setpoint
     type: px4_msgs::msg::TiltingDroneX4AttitudeSetpoint
+
+  - topic: /fmu/in/tilting_drone_x4_gains
+    type: px4_msgs::msg::TiltingDroneX4Gains
     ## MayurR ##
 
 

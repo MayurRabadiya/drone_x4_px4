@@ -259,6 +259,9 @@ private:
 	matrix::Vector3f _velocity_gain;
 	matrix::Vector3f _integral_gain;
 	matrix::Vector3f _integral{0.0f, 0.0f, 0.0f};
+	matrix::Vector3f _vel_prev{0.0f, 0.0f, 0.0f};
+	matrix::Vector3f _disturbance_est{0.0f, 0.0f, 0.0f};
+
 
 	float _mass;
 	//** MayurR */

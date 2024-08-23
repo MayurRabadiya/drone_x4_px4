@@ -100,7 +100,8 @@ MulticopterAttitudeControl::parameters_updated()
 
 	//** MayurR */
 	_attitude_control.setAtitttudeGain(Vector3f(_param_mc_krx_gain.get(), _param_mc_kry_gain.get(), _param_mc_krz_gain.get()),
-					   Vector3f(_param_mc_kax_gain.get(), _param_mc_kay_gain.get(), _param_mc_kaz_gain.get()));
+					   Vector3f(_param_mc_kax_gain.get(), _param_mc_kay_gain.get(), _param_mc_kaz_gain.get()),
+					   Vector3f(_param_mc_kix_gain.get(), _param_mc_kiy_gain.get(), _param_mc_kiz_gain.get()));
 
 	_attitude_control.setInertia(Vector3f(_param_mc_inertia_xx.get(), _param_mc_inertia_yy.get(), _param_mc_inertia_zz.get()));
 
@@ -205,9 +206,6 @@ MulticopterAttitudeControl::generate_attitude_setpoint(const Quatf &q, float dt,
 	attitude_setpoint.roll_body = euler_sp(0);
 	attitude_setpoint.pitch_body = euler_sp(1);
 	attitude_setpoint.yaw_body = euler_sp(2);
-
-	std::cout << "generate_attitude_setpoint: " << attitude_setpoint.roll_body << "  "<<attitude_setpoint.pitch_body <<"  "<<attitude_setpoint.yaw_body<<std::endl;
-
 
 	attitude_setpoint.thrust_body[2] = -throttle_curve(_manual_control_setpoint.throttle);
 	attitude_setpoint.timestamp = hrt_absolute_time();
@@ -344,6 +342,14 @@ MulticopterAttitudeControl::Run()
 			{
 	 			vehicle_angular_velocity_s angular_velocity;
 				tilting_drone_x4_attitude_setpoint_s x4_attitude_setpoint;
+				tilting_drone_x4_gains_s x4_gains;
+
+				if(_tilting_drone_x4_gains_sub.update(&x4_gains))
+				{
+					_attitude_control.setAtitttudeGain(Vector3f(x4_gains.rot_gain[0], x4_gains.rot_gain[1], x4_gains.rot_gain[2]),
+					   								   Vector3f(x4_gains.angular_gain[0], x4_gains.angular_gain[1], x4_gains.angular_gain[2]),
+					   								   Vector3f(x4_gains.rot_integral_gain[0], x4_gains.rot_integral_gain[1], x4_gains.rot_integral_gain[2]));
+				}
 
 				if(_vehicle_angular_velocity_sub.update(&angular_velocity) && _tilting_drone_x4_attitude_setpoint_sub.update(&x4_attitude_setpoint))
 				{

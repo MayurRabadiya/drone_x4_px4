@@ -404,7 +404,7 @@ void MulticopterPositionControl::Run()
 	vehicle_local_position_s vehicle_local_position;
 
 	if (_local_pos_sub.update(&vehicle_local_position)) {
-	
+
 		const float dt = math::constrain(((vehicle_local_position.timestamp_sample - _time_stamp_last_loop) * 1e-6f), 0.002f, 0.04f);
 		_time_stamp_last_loop = vehicle_local_position.timestamp_sample;
 
@@ -574,6 +574,17 @@ void MulticopterPositionControl::Run()
 
 			//** MayurR */
 			bool custom_ctrl;
+
+			tilting_drone_x4_gains_s x4_gains;
+
+			if(_tilting_drone_x4_gains_sub.update(&x4_gains))
+				{
+					_control.setPositionControlParam(Vector3f(x4_gains.pos_gain[0], x4_gains.pos_gain[1], x4_gains.pos_gain[2]),
+					   								   Vector3f(x4_gains.val_gain[0], x4_gains.val_gain[1], x4_gains.val_gain[2]),
+					   								   Vector3f(x4_gains.pos_integral_gain[0], x4_gains.pos_integral_gain[1], x4_gains.pos_integral_gain[2]),
+														 _param_mc_mass.get());
+				}
+
 			if (_px4_control == 1){_drone_x4 = 1;}
 
 			if (_drone_x4 == 1){custom_ctrl = true;}
