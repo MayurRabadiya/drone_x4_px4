@@ -94,6 +94,7 @@ if(gz-transport_FOUND)
 		baylands
   		lawn
 		window
+		wind_turbine
 	)
 
 	# find corresponding airframes
