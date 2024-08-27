@@ -28,7 +28,7 @@ git clone https://github.com/MayurRabadiya/drone_x4_px4.git --recursive
             │         
             └── control_allocator
                 └── ControlAllocator.cpp
-                        └── AttitudeControl.cpp
+
 ### Run SITL
 ```
 make px4_sitl gz_tilting_drone_x4
