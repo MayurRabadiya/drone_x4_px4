@@ -7,7 +7,7 @@
 ```
 git clone https://github.com/MayurRabadiya/drone_x4_px4.git --recursive
 ```
-/home/mayur/Downloads/workspace/drone_x4_px4/src/modules/mc_att_control/AttitudeControl/AttitudeControl.cpp
+
 ### Controller Location
     drone_x4_px4
     ├── src
@@ -17,6 +17,17 @@ git clone https://github.com/MayurRabadiya/drone_x4_px4.git --recursive
             │         └── PositionControl.cpp
             └── mc_att_control
                 └── AttitudeControl
+                        └── AttitudeControl.cpp
+                        
+### Allocation Matrix and Control allocator
+    drone_x4_px4
+    ├── src
+        └── modules
+            ├── ActuatorEffectiveness
+            │    └── ActuatorEffectivenessRotors.cpp
+            │         
+            └── control_allocator
+                └── ControlAllocator.cpp
                         └── AttitudeControl.cpp
 ### Run SITL
 ```
