@@ -219,7 +219,7 @@ int ActuatorEffectivenessRotors::computeEffectivenessMatrix(const Geometry &geom
 			float p   = sqrt(2.0f)/2;
 			float kt  = 0.016f;          // drage constant
 			float kf  = 8.54858e-06f;   // force constant
-			float del = kt * kf;
+			float del = kf * kt;
 
 			effectiveness(0, 0) = -p;
 			effectiveness(1, 0) = -p;

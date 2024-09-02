@@ -477,6 +477,8 @@ ControlAllocator::Run()
 				actuator_sp *= 0.135892781;    // Scalling factor. Calculated based on: 4 * 0.58873 / (uav_mass * gravity)
 				servo_sp    /= 6.2657320147;   // Scalling factor. PX4 only accepts input in range [-1, 1]
 
+				if (actuator_sp(0) <= 0.1f){servo_sp *= 0.0;}
+
 				_control_allocation[0]->setActuatorSetpoint(actuator_sp);
 
 				if (_has_slew_rate)

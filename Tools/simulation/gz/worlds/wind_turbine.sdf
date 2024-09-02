@@ -218,21 +218,21 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <scale>0.099552072 0.099552072 0.099552072</scale>
-              <uri>file://wind_turbine.dae</uri>
+              <scale>50 50 50</scale>
+              <uri>file://wind_turbine2.dae</uri>
             </mesh>
           </geometry>
         </visual>
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>file://wind_turbine.dae</uri>
+              <scale>50 50 50</scale>
+              <uri>file://wind_turbine2.dae</uri>
             </mesh>
           </geometry>
         </collision>
-        <pose>2.55 0 0 1.57853981634 0 0</pose>
+        <pose>0 0 0 0 0 0</pose>
         <inertial>
-          <pose>0 0 0 0 0 0</pose>
           <mass>1</mass>
           <inertia>
             <ixx>1</ixx>
