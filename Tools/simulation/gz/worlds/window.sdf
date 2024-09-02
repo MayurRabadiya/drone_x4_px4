@@ -229,7 +229,7 @@
             </mesh>
           </geometry>
         </collision>
-        <pose>2.55 0 0 0 0 0</pose>
+        <pose>5 0 0 0 0 0</pose>
         <inertial>
           <pose>0 0 0 0 0 0</pose>
           <mass>1</mass>
@@ -244,7 +244,7 @@
         </inertial>
         <enable_wind>false</enable_wind>
       </link>
-      <pose>2.55 0 0 0 0 0</pose>
+      <pose>5 0 0 0 0 0</pose>
       <static>false</static>2
       <self_collide>false</self_collide>
     </model>
@@ -265,7 +265,7 @@
             </mesh>
           </geometry>
         </collision>
-        <pose>-2.455 0 0 0 0 0</pose>
+        <pose>-5 0 0 0 0 0</pose>
         <inertial>
           <pose>0 0 0 0 0 0</pose>
           <mass>1</mass>
@@ -280,7 +280,7 @@
         </inertial>
         <enable_wind>false</enable_wind>
       </link>
-      <pose>-2.455 0 0 0 0 0</pose>
+      <pose>-5 0 0 0 0 0</pose>
       <static>false</static>2
       <self_collide>false</self_collide>
     </model>
@@ -301,7 +301,7 @@
             </mesh>
           </geometry>
         </collision>
-        <pose>0 -2.45 0 0 0 1.57</pose>
+        <pose>0 -5 0 0 0 1.57</pose>
         <inertial>
           <pose>0 0 0 0 0 0</pose>
           <mass>1</mass>
@@ -316,7 +316,7 @@
         </inertial>
         <enable_wind>false</enable_wind>
       </link>
-      <pose>0 -2.45 0 0 0 0</pose>
+      <pose>0 -5 0 0 0 0</pose>
       <static>false</static>2
       <self_collide>false</self_collide>
     </model>
@@ -337,7 +337,7 @@
             </mesh>
           </geometry>
         </collision>
-        <pose>0 2.55 0 0 0 1.57</pose>
+        <pose>0 5 0 0 0 1.57</pose>
         <inertial>
           <pose>0 0 0 0 0 0</pose>
           <mass>1</mass>
@@ -352,7 +352,7 @@
         </inertial>
         <enable_wind>false</enable_wind>
       </link>
-      <pose>0 2.45 0 0 0 0</pose>
+      <pose>0 5 0 0 0 0</pose>
       <static>false</static>2
       <self_collide>false</self_collide>
     </model>

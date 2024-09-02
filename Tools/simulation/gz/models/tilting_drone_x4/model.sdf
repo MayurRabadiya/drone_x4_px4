@@ -207,13 +207,15 @@
 
     <include merge='true'>
       <uri>model://OakD-Lite</uri>
-      <pose>0 0 -0.07 0 3.1415926535 0</pose>
+      <pose>0 0.07 0.03 -1.57  0 0</pose>
     </include>
     <joint name="CameraJoint" type="fixed">
       <parent>base_link</parent>
       <child>OakD-Lite/base_link</child>
-      <pose relative_to="base_link">0 0 -0.1 0 3.1415926535 0</pose>
+      <pose relative_to="base_link">0 0.07 0.03  1.57 0 0</pose>
     </joint>
+
+
 
     <!-- =============================================================== -->
     <!-- ===================== BOTTOM_RIGHT ARM ======================== -->
