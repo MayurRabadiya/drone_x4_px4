@@ -95,6 +95,7 @@ if(gz-transport_FOUND)
   		lawn
 		window
 		wind_turbine
+		taj
 	)
 
 	# find corresponding airframes

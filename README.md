@@ -32,6 +32,11 @@ git clone https://github.com/MayurRabadiya/drone_x4_px4.git --recursive
 ```
 make px4_sitl gz_tilting_drone_x4
 ```
+
+```
+make px4_sitl gz_I_drone
+```
+
 ### Parameters
 In following file you can change the gain Parameters.
 ```

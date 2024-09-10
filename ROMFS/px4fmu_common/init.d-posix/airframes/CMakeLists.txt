@@ -32,8 +32,10 @@
 ############################################################################
 
 px4_add_romfs_files(
-    7242_gz_tilting_drone_x4
-
+	# MayurR
+	7242_gz_tilting_drone_x4
+	7243_gz_I_drone
+	# MayurR
 	1010_gazebo-classic_iris_opt_flow
 	1010_gazebo-classic_iris_opt_flow.post
 	1011_gazebo-classic_iris_irlock
