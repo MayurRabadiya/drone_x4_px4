@@ -1,61 +1,75 @@
 #!/bin/sh
 #
-# @name Gazebo I_drone
+# @name Gazebo I_Drone
 #
 # @type Quadrotor
+# @description Airframe configuration for a custom tilting quadcopter (I_Drone), to be simulated in Gazebo via PX4. This configuration includes parameters for a custom controller, control allocation method, and the necessary gains for attitude and position control. This file is designed for a drone with 4 main rotors and 4 servos responsible for tilting the rotors.
 #
 
+# Load PX4 default parameters for multicopters
 . ${R}etc/init.d/rc.mc_defaults
 
-PX4_SIMULATOR=${PX4_SIMULATOR:=gz}
-PX4_GZ_WORLD=${PX4_GZ_WORLD:=default}
-PX4_SIM_MODEL=${PX4_SIM_MODEL:=I_drone}
+# Define Simulator and Model Parameters
+PX4_SIMULATOR=${PX4_SIMULATOR:=gz}     # Default simulator: Gazebo
+PX4_GZ_WORLD=${PX4_GZ_WORLD:=default}  # Default Gazebo world
+PX4_SIM_MODEL=${PX4_SIM_MODEL:=I_drone}  # Custom drone model: I_Drone
 
+# Set drone type: 1 for I_Drone , 0 for X_Drone
+param set-default CA_DRONE_TYPE 1
+
+# Enable Gazebo simulation and configure control allocation methods
 param set-default SIM_GZ_EN 1
-param set-default CA_METHOD 0  # Controll allocaton method. 0 --> Pseudo inverse method,  1 --> SaturatedPeusdo inverse method
+param set-default CA_METHOD 0  # Control Allocation: 0 → Pseudo-inverse, 1 → Saturated Pseudo-inverse
 
+# Specify controller type: 1 → Custom controller, 0 → PX4 default controller
+param set-default CA_CONTROLLER 1
 
-param set-default CA_CONTROLLER 1  # 1--> Custom controller,  0-->PX4 controller
+# Attitude Controller Gains
+param set-default MC_KRX_GAIN 90.0  # Roll rotation gain
+param set-default MC_KRY_GAIN 90.0  # Pitch rotation gain
+param set-default MC_KRZ_GAIN 30.0  # Yaw rotation gain
 
-param set-default MC_KRX_GAIN 90.0  # Rotation Gain --> Attitude_controller
-param set-default MC_KRY_GAIN 90.0
-param set-default MC_KRZ_GAIN 30.0
+# Angular Velocity Gains
+param set-default MC_KAX_GAIN 25.0  # Roll angular velocity gain
+param set-default MC_KAY_GAIN 25.0  # Pitch angular velocity gain
+param set-default MC_KAZ_GAIN 22.0  # Yaw angular velocity gain
 
-param set-default MC_KAX_GAIN 25.0  # Angular velocity Gain --> Attitude_controller
-param set-default MC_KAY_GAIN 25.0
-param set-default MC_KAZ_GAIN 22.0
-
-param set-default MC_KAIX_GAIN 0.0 # Integral Gain --> Attitude_controller
+# Integral Gains for Attitude Controller (Set to 0 to disable integral action)
+param set-default MC_KAIX_GAIN 0.0
 param set-default MC_KAIY_GAIN 0.0
 param set-default MC_KAIZ_GAIN 0.0
 
-param set-default MC_KXX_GAIN 8.2  # Prosition Gain --> Position_controller
-param set-default MC_KXY_GAIN 8.2
-param set-default MC_KXZ_GAIN 9.2
+# Position Controller Gains
+param set-default MC_KXX_GAIN 8.2  # Position control gain (X-axis)
+param set-default MC_KXY_GAIN 8.2  # Position control gain (Y-axis)
+param set-default MC_KXZ_GAIN 9.2  # Position control gain (Z-axis)
 
-param set-default MC_KVX_GAIN 8.5 # Velocity Gain --> Position_controller
-param set-default MC_KVY_GAIN 8.5
-param set-default MC_KVZ_GAIN 9.5
+# Velocity Controller Gains
+param set-default MC_KVX_GAIN 8.5  # Velocity control gain (X-axis)
+param set-default MC_KVY_GAIN 8.5  # Velocity control gain (Y-axis)
+param set-default MC_KVZ_GAIN 9.5  # Velocity control gain (Z-axis)
 
-param set-default MC_KIX_GAIN 0.0 # Integral Gain --> Position_controller
+# Integral Gains for Position Controller (Disabled by default)
+param set-default MC_KIX_GAIN 0.0
 param set-default MC_KIY_GAIN 0.0
 param set-default MC_KIZ_GAIN 0.0
 
-param set-default MC_MASS 1.8  # UAV Mass
+# UAV Physical Properties
+param set-default MC_MASS 1.8          # Total mass of the UAV in kilograms
+param set-default MC_INERTIA_XX 0.07   # Moment of inertia (XX axis)
+param set-default MC_INERTIA_YY 0.07   # Moment of inertia (YY axis)
+param set-default MC_INERTIA_ZZ 0.07   # Moment of inertia (ZZ axis)
 
-param set-default MC_INERTIA_XX 0.07  # UAV Inertia
-param set-default MC_INERTIA_YY 0.07
-param set-default MC_INERTIA_ZZ 0.07
+# Sensor Simulation Enablement
+param set-default SENS_EN_GPSSIM 1     # Enable GPS simulation
+param set-default SENS_EN_BAROSIM 0    # Disable barometer simulation
+param set-default SENS_EN_MAGSIM 1     # Enable magnetometer simulation
 
-param set-default SENS_EN_GPSSIM 1
-param set-default SENS_EN_BAROSIM 0
-param set-default SENS_EN_MAGSIM 1
+# Control Allocation Parameters for Tilting Quadcopter
+param set-default CA_AIRFRAME 0          # Airframe ID
+param set-default CA_ROTOR_COUNT 8       # 4 rotors + 4 servos for tilting
 
-param set-default UXRCE_DDS_SYNCT 0
-
-param set-default CA_AIRFRAME 0
-param set-default CA_ROTOR_COUNT 8  # In the case of tilting_drone_x4 --> 4 rotor_motors + 4 servo_motors
-
+# Rotor Positions (meters) and Torque Constants (per motor)
 param set-default CA_ROTOR0_PX  0.13
 param set-default CA_ROTOR0_PY  0.13
 param set-default CA_ROTOR0_KM -0.05
@@ -72,11 +86,13 @@ param set-default CA_ROTOR3_PX -0.13
 param set-default CA_ROTOR3_PY  0.13
 param set-default CA_ROTOR3_KM  0.05
 
-param set-default CA_ROTOR0_TILT 1
-param set-default CA_ROTOR1_TILT 2
-param set-default CA_ROTOR2_TILT 3
-param set-default CA_ROTOR3_TILT 4
+# Tilt Settings for Each Rotor (degrees)
+param set-default CA_ROTOR0_TILT 1  # Tilt rotor 0
+param set-default CA_ROTOR1_TILT 2  # Tilt rotor 1
+param set-default CA_ROTOR2_TILT 3  # Tilt rotor 2
+param set-default CA_ROTOR3_TILT 4  # Tilt rotor 3
 
+# Motor Control Limits (Electrical Control Functions)
 param set-default SIM_GZ_EC_FUNC1 101
 param set-default SIM_GZ_EC_FUNC2 102
 param set-default SIM_GZ_EC_FUNC3 103
@@ -92,14 +108,15 @@ param set-default SIM_GZ_EC_MAX2 1100
 param set-default SIM_GZ_EC_MAX3 1100
 param set-default SIM_GZ_EC_MAX4 1100
 
-param set-default CA_SV_CS_COUNT 4
+# Servo Control Limits for Tilt Mechanism
+param set-default CA_SV_CS_COUNT 4  # Number of servo control channels
 
 param set-default SIM_GZ_SV_FUNC1 201
 param set-default SIM_GZ_SV_FUNC2 202
 param set-default SIM_GZ_SV_FUNC3 203
 param set-default SIM_GZ_SV_FUNC4 204
 
-param set-default SIM_GZ_SV_MIN1 0     #  Minimum output value (when not disarmed).
+param set-default SIM_GZ_SV_MIN1 0
 param set-default SIM_GZ_SV_MIN2 0
 param set-default SIM_GZ_SV_MIN3 0
 param set-default SIM_GZ_SV_MIN4 0
@@ -114,6 +131,7 @@ param set-default SIM_GZ_SV_DIS2 500
 param set-default SIM_GZ_SV_DIS3 500
 param set-default SIM_GZ_SV_DIS4 500
 
+# Servo Tilt Angle Limits (degrees)
 param set-default CA_SV_TL0_MAXA  180
 param set-default CA_SV_TL0_MINA -180
 param set-default CA_SV_TL1_MAXA  180
@@ -123,9 +141,9 @@ param set-default CA_SV_TL2_MINA -180
 param set-default CA_SV_TL3_MAXA  180
 param set-default CA_SV_TL3_MINA -180
 
-param set-default MPC_THR_HOVER 0.60
+# Miscellaneous
+param set-default MPC_THR_HOVER 0.60  # Hover throttle setting
 
-# disable attitude failure detection
-param set-default FD_FAIL_P 0
-param set-default FD_FAIL_R 0
-
+# Disable Attitude Failure Detection
+param set-default FD_FAIL_P 0  # Disable pitch failure detection
+param set-default FD_FAIL_R 0  # Disable roll failure detection

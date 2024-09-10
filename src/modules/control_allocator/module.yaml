@@ -57,7 +57,20 @@ parameters:
                 0: PX4 controller.
                 1: Custom controller.
             default: 0
+
+        CA_DRONE_TYPE:
+            description:
+                short: Type of drone. X_Drone or I_Drone.
+                long: |
+                  One tilting angle drones have only one more degree of freedom,
+                  while fully actuated drones have 6 degree of freedom.
+            type: enum
+            values:
+                0: X_Drone.
+                1: I_Drone.
+            default: 0
 # ** MayurR *
+
 
         # Motor parameters
         CA_R_REV:

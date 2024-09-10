@@ -73,7 +73,12 @@ public:
 	struct Geometry {
 		RotorGeometry rotors[NUM_ROTORS_MAX];
 		int num_rotors{0};
-		int32_t _drone_x4{0}; //** MayurR */
+
+		//** MayurR */
+		int32_t _drone_type{0};
+		int32_t _drone_x4{0};
+		//** MayurR */
+
 		bool propeller_torque_disabled{false};
 		bool yaw_by_differential_thrust_disabled{false};
 		bool propeller_torque_disabled_non_upwards{false}; ///< keeps propeller torque enabled for upward facing motors
@@ -153,6 +158,11 @@ private:
 
 	DEFINE_PARAMETERS(
 		(ParamInt<px4::params::CA_ROTOR_COUNT>) _param_ca_rotor_count,
-		(ParamInt<px4::params::CA_CONTROLLER>) _param_ca_controller  //** MayurR */
+
+		//** MayurR */
+		(ParamInt<px4::params::CA_CONTROLLER>) _param_ca_controller,
+		(ParamInt<px4::params::CA_CONTROLLER>) _param_ca_drone_type
+		//** MayurR */
+
 	)
 };
