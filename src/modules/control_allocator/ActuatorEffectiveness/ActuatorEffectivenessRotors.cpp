@@ -214,7 +214,68 @@ int ActuatorEffectivenessRotors::computeEffectivenessMatrix(const Geometry &geom
 		//** MayurR */
 		else if (geometry._drone_type == 1) // I_Drone Allocation Matrix
 		{
-			// Add allocation matrix for I_drone here.
+			float beta   = 0.523599;       // 30 deg
+			float d1  = 0.178;          // 178 mm
+			float d2  = 0.044;   // 44mm
+			float ct1 = 2.103*1e-06;
+			float cd1 = 2.1113*1e-08;
+			float delta = ct1*cd1;
+
+			effectiveness(0, 0) = sin(beta);
+			effectiveness(1, 0) = -cos(beta);
+			effectiveness(2, 0) =  0;
+			effectiveness(3, 0) =  -sin(beta)*delta;
+			effectiveness(4, 0) =  cos(beta)*delta;
+			effectiveness(5, 0) = -d1;
+
+			effectiveness(0, 1) =  0;
+			effectiveness(1, 1) =  0;
+			effectiveness(2, 1) =  1;
+			effectiveness(3, 1) = d1*sin(beta)-d2*cos(beta);
+			effectiveness(4, 1) = -d1*cos(beta)-d2*sin(beta);
+			effectiveness(5, 1) = -delta;
+
+			effectiveness(0, 2) =  sin(beta);
+			effectiveness(1, 2) = cos(beta);
+			effectiveness(2, 2) =  0;
+			effectiveness(3, 2) =  sin(beta)*delta;
+			effectiveness(4, 2) = cos(beta)*delta;
+			effectiveness(5, 2) = -d1;
+
+			effectiveness(0, 3) =  0;
+			effectiveness(1, 3) =  0;
+			effectiveness(2, 3) =  1;
+			effectiveness(3, 3) =  d1*sin(beta)-d2*cos(beta);
+			effectiveness(4, 3) = d1*cos(beta)+d2*sin(beta);
+			effectiveness(5, 3) =  delta;
+
+			effectiveness(0, 4) =  -sin(beta);
+			effectiveness(1, 4) =  cos(beta);
+			effectiveness(2, 4) =  0;
+			effectiveness(3, 4) = sin(beta)*delta;
+			effectiveness(4, 4) = -cos(beta)*delta;
+			effectiveness(5, 4) = -d1;
+
+			effectiveness(0, 5) =  0;
+			effectiveness(1, 5) =  0;
+			effectiveness(2, 5) =  1;
+			effectiveness(3, 5) =  -d1*sin(beta)+ d2*cos(beta);
+			effectiveness(4, 5) =  d1*cos(beta)+d2*sin(beta);
+			effectiveness(5, 5) = -delta;
+
+			effectiveness(0, 6) = -sin(beta);
+			effectiveness(1, 6) =  -cos(beta);
+			effectiveness(2, 6) =  0;
+			effectiveness(3, 6) = -sin(beta)*delta;
+			effectiveness(4, 6) =  -cos(beta)*delta;
+			effectiveness(5, 6) = -d1;
+
+			effectiveness(0, 7) =  0;
+			effectiveness(1, 7) =  0;
+			effectiveness(2, 7) =  1;
+			effectiveness(3, 7) = -d1*sin(beta)+ d2*cos(beta);
+			effectiveness(4, 7) =  -d1*cos(beta) -d2*sin(beta);
+			effectiveness(5, 7) =  delta;
 		}
 		else  // X_drone Allocation Matrix
 		{

@@ -55,7 +55,7 @@ param set-default MC_KIY_GAIN 0.0
 param set-default MC_KIZ_GAIN 0.0
 
 # UAV Physical Properties
-param set-default MC_MASS 1.8          # Total mass of the UAV in kilograms
+param set-default MC_MASS 0.579          # Total mass of the UAV in kilograms
 param set-default MC_INERTIA_XX 0.07   # Moment of inertia (XX axis)
 param set-default MC_INERTIA_YY 0.07   # Moment of inertia (YY axis)
 param set-default MC_INERTIA_ZZ 0.07   # Moment of inertia (ZZ axis)
