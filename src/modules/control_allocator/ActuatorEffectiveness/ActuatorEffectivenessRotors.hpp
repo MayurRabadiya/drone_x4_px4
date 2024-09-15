@@ -76,7 +76,7 @@ public:
 
 		//** MayurR */
 		int32_t _drone_type{0};
-		int32_t _drone_x4{0};
+		int32_t custom_controller{0};
 		//** MayurR */
 
 		bool propeller_torque_disabled{false};
@@ -160,8 +160,8 @@ private:
 		(ParamInt<px4::params::CA_ROTOR_COUNT>) _param_ca_rotor_count,
 
 		//** MayurR */
-		(ParamInt<px4::params::CA_CONTROLLER>) _param_ca_controller,
-		(ParamInt<px4::params::CA_CONTROLLER>) _param_ca_drone_type
+		(ParamInt<px4::params::CA_DRONE_TYPE>) _param_ca_drone_type,
+		(ParamInt<px4::params::CA_CONTROLLER>) _param_ca_controller
 		//** MayurR */
 
 	)

@@ -2,8 +2,8 @@
 <COLLADA version="1.4.1" xmlns="http://www.collada.org/2005/11/COLLADASchema">
 
   <asset>
-    <created>2024-09-15T13:40:17</created>
-    <modified>2024-09-15T13:40:17</modified>
+    <created>2024-09-09T18:58:57</created>
+    <modified>2024-09-09T18:58:57</modified>
     <unit meter="1" name="meters"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -285,23 +285,23 @@
     <visual_scene id="ID1">
       <node id="ID2" name="tilt_arm">
         <node>
-          <matrix>-1 0 -4.16334e-16 -4.97865e-08 -4.16334e-16 0 1 -0.113993 0 1 0 0.00325 0 0 0 1</matrix>
+          <matrix>1 0 0 4.97865e-08 0 0 -1 0.113993 0 1 0 0.00325 0 0 0 1</matrix>
           <instance_node url="#ID3"/>
         </node>
         <node>
-          <matrix>-1 0 -4.16334e-16 -4.97865e-08 -4.16334e-16 0 1 -0.113993 0 1 0 0.00325 0 0 0 1</matrix>
+          <matrix>1 0 0 4.97865e-08 0 0 -1 0.113993 0 1 0 0.00325 0 0 0 1</matrix>
           <instance_node url="#ID12"/>
         </node>
         <node>
-          <matrix>-1 0 4.16334e-16 -4.97865e-08 -4.16334e-16 0 -1 8.75561e-09 0 -1 0 4.29564e-09 0 0 0 1</matrix>
+          <matrix>1 0 0 4.97865e-08 0 0 1 -8.75561e-09 0 -1 0 4.29564e-09 0 0 0 1</matrix>
           <instance_node url="#ID19"/>
         </node>
         <node>
-          <matrix>-1 4.16334e-16 0 -4.97865e-08 -4.16334e-16 -1 0 -0.113993 0 0 1 0.01589 0 0 0 1</matrix>
+          <matrix>1 0 0 4.97865e-08 0 1 0 0.113993 0 0 1 0.01589 0 0 0 1</matrix>
           <instance_node url="#ID27"/>
         </node>
         <node>
-          <matrix>-1 4.16334e-16 0 -4.97865e-08 -4.16334e-16 -1 0 -0.0746989 0 0 1 -0.00275 0 0 0 1</matrix>
+          <matrix>1 0 0 4.97865e-08 0 1 0 0.0746989 0 0 1 -0.00275 0 0 0 1</matrix>
           <instance_node url="#ID35"/>
         </node>
       </node>

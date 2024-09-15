@@ -14,6 +14,8 @@ PX4_SIM_MODEL=${PX4_SIM_MODEL:=tilting_drone_x4}
 param set-default SIM_GZ_EN 1
 param set-default CA_METHOD 0  # Controll allocaton method. 0 --> Pseudo inverse method,  1 --> SaturatedPeusdo inverse method
 
+# Set drone type: 1 for I_Drone , 0 for X_Drone
+param set-default CA_DRONE_TYPE 0
 
 param set-default CA_CONTROLLER 1  # 1--> Custom controller,  0-->PX4 controller
 

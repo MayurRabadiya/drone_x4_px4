@@ -8,12 +8,12 @@
       <inertial>
         <mass>1.775</mass>
         <inertia>
-          <ixx>0.04166666666666667</ixx>
+          <ixx>0.02166666666666667</ixx>
           <ixy>0</ixy>
           <ixz>0</ixz>
-          <iyy>0.04166666666666667</iyy>
+          <iyy>0.02166666666666667</iyy>
           <iyz>0</iyz>
-          <izz>0.08000000000000001</izz>
+          <izz>0.04000000000000001</izz>
         </inertia>
       </inertial>
       <gravity>true</gravity>
