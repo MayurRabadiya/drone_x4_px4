@@ -240,7 +240,7 @@
           <geometry>
             <mesh>
               <scale>80 80 80</scale>
-              <uri>file://wind_turbine2.dae</uri>
+              <uri>file://mesh/wind_turbine2.dae</uri>
             </mesh>
           </geometry>
         </visual>
@@ -248,7 +248,7 @@
           <geometry>
             <mesh>
               <scale>80 80 80</scale>
-              <uri>file://wind_turbine2.dae</uri>
+              <uri>file://mesh/wind_turbine2.dae</uri>
             </mesh>
           </geometry>
         </collision>
@@ -278,7 +278,7 @@
           <geometry>
             <mesh>
               <scale>80 80 80</scale>
-              <uri>file://wind_turbine2.dae</uri>
+              <uri>file://mesh/wind_turbine2.dae</uri>
             </mesh>
           </geometry>
         </visual>
@@ -286,7 +286,7 @@
           <geometry>
             <mesh>
               <scale>80 80 80</scale>
-              <uri>file://wind_turbine2.dae</uri>
+              <uri>file://mesh/wind_turbine2.dae</uri>
             </mesh>
           </geometry>
         </collision>
@@ -316,7 +316,7 @@
           <geometry>
             <mesh>
               <scale>80 80 80</scale>
-              <uri>file://wind_turbine2.dae</uri>
+              <uri>file://mesh/wind_turbine2.dae</uri>
             </mesh>
           </geometry>
         </visual>
@@ -324,7 +324,7 @@
           <geometry>
             <mesh>
               <scale>80 80 80</scale>
-              <uri>file://wind_turbine2.dae</uri>
+              <uri>file://mesh/wind_turbine2.dae</uri>
             </mesh>
           </geometry>
         </collision>
@@ -353,7 +353,7 @@
           <geometry>
             <mesh>
               <scale>80 80 80</scale>
-              <uri>file://wind_turbine2.dae</uri>
+              <uri>file://mesh/wind_turbine2.dae</uri>
             </mesh>
           </geometry>
         </visual>
@@ -361,7 +361,7 @@
           <geometry>
             <mesh>
               <scale>80 80 80</scale>
-              <uri>file://wind_turbine2.dae</uri>
+              <uri>file://mesh/wind_turbine2.dae</uri>
             </mesh>
           </geometry>
         </collision>
@@ -390,7 +390,7 @@
           <geometry>
             <mesh>
               <scale>80 80 80</scale>
-              <uri>file://wind_turbine2.dae</uri>
+              <uri>file://mesh/wind_turbine2.dae</uri>
             </mesh>
           </geometry>
         </visual>
@@ -398,7 +398,7 @@
           <geometry>
             <mesh>
               <scale>80 80 80</scale>
-              <uri>file://wind_turbine2.dae</uri>
+              <uri>file://mesh/wind_turbine2.dae</uri>
             </mesh>
           </geometry>
         </collision>
@@ -427,7 +427,7 @@
           <geometry>
             <mesh>
               <scale>80 80 80</scale>
-              <uri>file://wind_turbine2.dae</uri>
+              <uri>file://mesh/wind_turbine2.dae</uri>
             </mesh>
           </geometry>
         </visual>
@@ -435,7 +435,7 @@
           <geometry>
             <mesh>
               <scale>80 80 80</scale>
-              <uri>file://wind_turbine2.dae</uri>
+              <uri>file://mesh/wind_turbine2.dae</uri>
             </mesh>
           </geometry>
         </collision>

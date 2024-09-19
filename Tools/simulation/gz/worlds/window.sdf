@@ -241,14 +241,14 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>file://wall.dae</uri>
+              <uri>file://mesh/wall.dae</uri>
             </mesh>
           </geometry>
         </visual>
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>file://wall.dae</uri>
+              <uri>file://mesh/wall.dae</uri>
             </mesh>
           </geometry>
         </collision>
@@ -277,14 +277,14 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>file://wall.dae</uri>
+              <uri>file://mesh/wall.dae</uri>
             </mesh>
           </geometry>
         </visual>
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>file://wall.dae</uri>
+              <uri>file://mesh/wall.dae</uri>
             </mesh>
           </geometry>
         </collision>
@@ -313,14 +313,14 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>file://wall.dae</uri>
+              <uri>file://mesh/wall.dae</uri>
             </mesh>
           </geometry>
         </visual>
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>file://wall.dae</uri>
+              <uri>file://mesh/wall.dae</uri>
             </mesh>
           </geometry>
         </collision>
@@ -349,14 +349,14 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>file://wall.dae</uri>
+              <uri>file://mesh/wall.dae</uri>
             </mesh>
           </geometry>
         </visual>
         <collision name='collision'>
           <geometry>
             <mesh>
-              <uri>file://wall.dae</uri>
+              <uri>file://mesh/wall.dae</uri>
             </mesh>
           </geometry>
         </collision>
