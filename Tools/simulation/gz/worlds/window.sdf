@@ -154,16 +154,29 @@
       </plugin>
       <plugin name="Entity tree" filename="EntityTree" />
     </gui>
-    <gravity>0 0 -9.8</gravity>
-    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
-    <atmosphere type="adiabatic" />
+    <gravity>0 0 -9.8000000000000007</gravity>
+    <magnetic_field>6.0000000000000002e-06 2.3e-05 -4.1999999999999998e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
     <scene>
-      <grid>false</grid>
-      <ambient>0.4 0.4 0.4 1</ambient>
-      <background>0.7 0.7 0.7 1</background>
+      <sky>
+        <clouds>
+          <speed>12</speed>
+        </clouds>
+      </sky>
+      <grid>true</grid>
+      <ambient>0.5 0.5 0.5 0.300000012</ambient>
+      <background>0.300000012 0.300000012 0.300000012 0.300000012</background>
       <shadows>true</shadows>
     </scene>
-    <model name="ground_plane">
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <world_frame_orientation>ENU</world_frame_orientation>
+      <latitude_deg>47.397971057728974</latitude_deg>
+      <longitude_deg>8.5461637398001464</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+    <model name='ground_plane'>
       <static>true</static>
       <link name="link">
         <collision name="collision">
@@ -175,28 +188,38 @@
           </geometry>
           <surface>
             <friction>
-              <ode />
+              <ode>
+                <mu>0.59999999999999998</mu>
+                <mu2>0.59999999999999998</mu2>
+              </ode>
             </friction>
-            <bounce />
-            <contact />
+            <bounce/>
+            <contact>
+              <collide_bitmask>65535</collide_bitmask>
+              <ode>
+                <min_depth>0.0050000000000000001</min_depth>
+                <kp>100000000</kp>
+              </ode>
+            </contact>
           </surface>
         </collision>
-        <visual name="visual">
+        <visual name='visual'>
+          <cast_shadows>false</cast_shadows>
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>100 100</size>
+              <size>400 400</size>
             </plane>
           </geometry>
           <material>
-            <ambient>0.2 0.2 0.2 1</ambient>
-            <diffuse>0.2 0.2 0.2 1</diffuse>
-            <specular>0.2 0.2 0.2 1</specular>
+            <diffuse>0.600000024 1 0.25 0.5</diffuse>
+            <specular>0 0 0 0</specular>
+            <emissive>0 0 0 0</emissive>
           </material>
         </visual>
-        <pose>0 0 0 0 -0 0</pose>
+        <pose>0 0 0 0 0 0</pose>
         <inertial>
-          <pose>0 0 0 0 -0 0</pose>
+          <pose>0 0 0 0 0 0</pose>
           <mass>1</mass>
           <inertia>
             <ixx>1</ixx>
