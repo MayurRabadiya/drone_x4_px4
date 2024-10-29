@@ -1,0 +1,133 @@
+#!/bin/sh
+#
+# @name Gazebo x_drone
+#
+# @type Quadrotor
+#
+
+. ${R}etc/init.d/rc.mc_defaults
+
+PX4_SIMULATOR=${PX4_SIMULATOR:=gz}
+PX4_GZ_WORLD=${PX4_GZ_WORLD:=default}
+PX4_SIM_MODEL=${PX4_SIM_MODEL:=x_drone}
+
+param set-default SIM_GZ_EN 1
+param set-default CA_METHOD 0  # Controll allocaton method. 0 --> Pseudo inverse method,  1 --> SaturatedPeusdo inverse method
+
+# Set drone type: 1 for I_Drone , 0 for X_Drone
+param set-default CA_DRONE_TYPE 0
+
+param set-default CA_CONTROLLER 1  # 1--> Custom controller,  0-->PX4 controller
+
+param set-default MC_KRX_GAIN 90.0  # Rotation Gain --> Attitude_controller
+param set-default MC_KRY_GAIN 90.0
+param set-default MC_KRZ_GAIN 30.0
+
+param set-default MC_KAX_GAIN 25.0  # Angular velocity Gain --> Attitude_controller
+param set-default MC_KAY_GAIN 25.0
+param set-default MC_KAZ_GAIN 22.0
+
+param set-default MC_KAIX_GAIN 0.0 # Integral Gain --> Attitude_controller
+param set-default MC_KAIY_GAIN 0.0
+param set-default MC_KAIZ_GAIN 0.0
+
+param set-default MC_KXX_GAIN 8.2  # Prosition Gain --> Position_controller
+param set-default MC_KXY_GAIN 8.2
+param set-default MC_KXZ_GAIN 9.2
+
+param set-default MC_KVX_GAIN 8.5 # Velocity Gain --> Position_controller
+param set-default MC_KVY_GAIN 8.5
+param set-default MC_KVZ_GAIN 9.5
+
+param set-default MC_KIX_GAIN 0.0 # Integral Gain --> Position_controller
+param set-default MC_KIY_GAIN 0.0
+param set-default MC_KIZ_GAIN 0.0
+
+param set-default MC_MASS 1.8  # UAV Mass
+
+param set-default MC_INERTIA_XX 0.07  # UAV Inertia
+param set-default MC_INERTIA_YY 0.07
+param set-default MC_INERTIA_ZZ 0.07
+
+param set-default SENS_EN_GPSSIM 1
+param set-default SENS_EN_BAROSIM 0
+param set-default SENS_EN_MAGSIM 1
+
+param set-default UXRCE_DDS_SYNCT 0
+
+param set-default CA_AIRFRAME 0
+param set-default CA_ROTOR_COUNT 8  # In the case of x_drone --> 4 rotor_motors + 4 servo_motors
+
+param set-default CA_ROTOR0_PX  0.13
+param set-default CA_ROTOR0_PY  0.13
+param set-default CA_ROTOR0_KM -0.05
+
+param set-default CA_ROTOR1_PX -0.13
+param set-default CA_ROTOR1_PY -0.13
+param set-default CA_ROTOR1_KM  0.05
+
+param set-default CA_ROTOR2_PX  0.13
+param set-default CA_ROTOR2_PY -0.13
+param set-default CA_ROTOR2_KM -0.05
+
+param set-default CA_ROTOR3_PX -0.13
+param set-default CA_ROTOR3_PY  0.13
+param set-default CA_ROTOR3_KM  0.05
+
+param set-default CA_ROTOR0_TILT 1
+param set-default CA_ROTOR1_TILT 2
+param set-default CA_ROTOR2_TILT 3
+param set-default CA_ROTOR3_TILT 4
+
+param set-default SIM_GZ_EC_FUNC1 101
+param set-default SIM_GZ_EC_FUNC2 102
+param set-default SIM_GZ_EC_FUNC3 103
+param set-default SIM_GZ_EC_FUNC4 104
+
+param set-default SIM_GZ_EC_MIN1 150
+param set-default SIM_GZ_EC_MIN2 150
+param set-default SIM_GZ_EC_MIN3 150
+param set-default SIM_GZ_EC_MIN4 150
+
+param set-default SIM_GZ_EC_MAX1 1100
+param set-default SIM_GZ_EC_MAX2 1100
+param set-default SIM_GZ_EC_MAX3 1100
+param set-default SIM_GZ_EC_MAX4 1100
+
+param set-default CA_SV_CS_COUNT 4
+
+param set-default SIM_GZ_SV_FUNC1 201
+param set-default SIM_GZ_SV_FUNC2 202
+param set-default SIM_GZ_SV_FUNC3 203
+param set-default SIM_GZ_SV_FUNC4 204
+
+param set-default SIM_GZ_SV_MIN1 0     #  Minimum output value (when not disarmed).
+param set-default SIM_GZ_SV_MIN2 0
+param set-default SIM_GZ_SV_MIN3 0
+param set-default SIM_GZ_SV_MIN4 0
+
+param set-default SIM_GZ_SV_MAX1 1000
+param set-default SIM_GZ_SV_MAX2 1000
+param set-default SIM_GZ_SV_MAX3 1000
+param set-default SIM_GZ_SV_MAX4 1000
+
+param set-default SIM_GZ_SV_DIS1 500
+param set-default SIM_GZ_SV_DIS2 500
+param set-default SIM_GZ_SV_DIS3 500
+param set-default SIM_GZ_SV_DIS4 500
+
+param set-default CA_SV_TL0_MAXA  180
+param set-default CA_SV_TL0_MINA -180
+param set-default CA_SV_TL1_MAXA  180
+param set-default CA_SV_TL1_MINA -180
+param set-default CA_SV_TL2_MAXA  180
+param set-default CA_SV_TL2_MINA -180
+param set-default CA_SV_TL3_MAXA  180
+param set-default CA_SV_TL3_MINA -180
+
+param set-default MPC_THR_HOVER 0.60
+
+# disable attitude failure detection
+param set-default FD_FAIL_P 0
+param set-default FD_FAIL_R 0
+

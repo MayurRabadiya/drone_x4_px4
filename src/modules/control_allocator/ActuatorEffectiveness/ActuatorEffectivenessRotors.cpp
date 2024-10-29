@@ -219,9 +219,9 @@ int ActuatorEffectivenessRotors::computeEffectivenessMatrix(const Geometry &geom
 			float beta   = 0.523599;     // 30 deg
 			float d1  = 0.178;           // 178 mm
 			float d2  = 0.044;  		 // 44mm
-			float ct1 = 2.103*1e-06;
-			float cd1 = 2.1113*1e-08;
-			float delta = ct1*cd1;
+			float kt  = 0.016f;          // drage constant
+			float kf  = 8.54858e-06f;   // force constant
+			float delta = kf * kt;
 
 			effectiveness(0, 0) = -sin(beta);
 			effectiveness(1, 0) = -cos(beta);
