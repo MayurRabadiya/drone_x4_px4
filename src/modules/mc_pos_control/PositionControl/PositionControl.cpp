@@ -42,7 +42,7 @@
 #include <px4_platform_common/defines.h>
 #include <geo/geo.h>
 
-#include <iostream>
+//#include <iostream>
 
 using namespace matrix;
 

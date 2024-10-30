@@ -39,7 +39,7 @@
 #include <px4_platform_common/events.h>
 #include "PositionControl/ControlMath.hpp"
 
-#include <iostream>
+//#include <iostream>
 
 using namespace matrix;
 

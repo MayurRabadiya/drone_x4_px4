@@ -40,7 +40,7 @@
  */
 
 #include "ControlAllocationPseudoInverse.hpp"
-#include <iostream>
+//#include <iostream>
 
 void
 ControlAllocationPseudoInverse::setEffectivenessMatrix(
@@ -186,8 +186,10 @@ void ControlAllocationPseudoInverse::allocate(const uint32_t drone_x4)
 	// Compute new gains if needed
 	if (_mix_update_needed) {
 		matrix::geninv(_effectiveness, _mix);
-		std::cout<<"_effectiveness:" << _effectiveness << std::endl;
-		std::cout<<"PseudoInverse_mix :" << _mix << std::endl;
+		//printf("_effectiveness: %d",_effectiveness);
+		//printf("PseudoInverse_mix: %d",_mix);
+		//std::cout<<"_effectiveness:" << _effectiveness << std::endl;
+		//std::cout<<"PseudoInverse_mix :" << _mix << std::endl;
 
 		if (_normalization_needs_update && !_had_actuator_failure) {
 			updateControlAllocationMatrixScale();

@@ -43,7 +43,7 @@
 
 #include "ActuatorEffectivenessTilts.hpp"
 
-#include<iostream>
+//#include<iostream>
 
 using namespace matrix;
 
@@ -216,12 +216,12 @@ int ActuatorEffectivenessRotors::computeEffectivenessMatrix(const Geometry &geom
 
 		if (geometry._drone_type == 1) // I_Drone Allocation Matrix
 		{
-			float beta   = 0.523599;     // 30 deg
-			float d1  = 0.178;           // 178 mm
-			float d2  = 0.044;  		 // 44mm
-			float kt  = 0.016f;          // drage constant
-			float kf  = 8.54858e-06f;   // force constant
-			float delta = kf * kt;
+			double beta   = 0.523599;     // 30 deg
+			double d1  = 0.178;           // 178 mm
+			double d2  = 0.044;  		 // 44mm
+			double kt  = 0.016f;          // drage constant
+			double kf  = 8.54858e-06f;   // force constant
+			double delta = kf * kt;
 
 			effectiveness(0, 0) = -sin(beta);
 			effectiveness(1, 0) = -cos(beta);

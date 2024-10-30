@@ -39,7 +39,7 @@
 #include <mathlib/math/Functions.hpp>
 #include <px4_platform_common/events.h>
 
-#include<iostream>
+//#include<iostream>
 
 using namespace matrix;
 using namespace time_literals;
