@@ -153,8 +153,8 @@ void PositionControl::_positionControlMR(const float dt)
 	ControlMath::setZeroIfNanVector3f(_pos_sp);
 	ControlMath::setZeroIfNanVector3f(_vel_sp);
 
-	Vector3f e_p = _pos - _pos_sp;
-	Vector3f e_v = _vel - _vel_sp;
+	Vector3f e_p = (0 0 0);//_pos - _pos_sp; //alexis
+	Vector3f e_v = (0, 0, 0);//_vel - _vel_sp; //alexis
 
 	_vel_int += e_p * dt;
 	ControlMath::setZeroIfNanVector3f(e_p);
