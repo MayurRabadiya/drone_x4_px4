@@ -125,6 +125,7 @@ param set-default CA_SV_TL2_MINA -180
 param set-default CA_SV_TL3_MAXA  180
 param set-default CA_SV_TL3_MINA -180
 
+
 param set-default MPC_THR_HOVER 0.60
 
 # disable attitude failure detection
